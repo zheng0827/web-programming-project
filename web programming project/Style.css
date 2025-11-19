@@ -1,0 +1,25 @@
+﻿body.home {
+    margin: 0;
+    display: flex;
+    font-size: large;
+    flex-direction: column;
+    justify-content: center; /* 垂直置中 */
+    align-items: center; /* 水平置中 */
+    min-height: 100vh;
+}
+form.home {
+    display: flex;
+}
+div.form-container {
+    display: flex;
+    gap: 50px; /* 控制兩個表單間距 */
+    flex-wrap: wrap;
+}
+#Login1 {
+    background-color: #808080;
+    border-radius: 25px;
+}
+#CreateUserWizard1 {
+    background-color: #808080;
+    border-radius: 25px;
+}
