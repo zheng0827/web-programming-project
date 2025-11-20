@@ -23,3 +23,30 @@ div.form-container {
     background-color: #808080;
     border-radius: 25px;
 }
+body {
+    margin: 0;
+}
+div.title {
+    font-size: x-large;
+    height: fit-content;
+    width: 100%;
+    background-color: aquamarine;
+    padding-top: 10px;
+    padding-left: 25px;
+    padding-bottom: 10px;
+}
+div.content {
+    margin: 0;
+    height:;
+    width: 100%;
+    display: flex;
+    background-color: antiquewhite;
+}
+div.left {
+    background-color: black;
+    width: 10%;
+}
+div.main {
+    background-color: #ff0000;
+    width: 90%;
+}
