@@ -13,15 +13,5 @@ namespace web_programming_project
         {
 
         }
-
-        protected void Login1_Authenticate(object sender, AuthenticateEventArgs e)
-        {
-
-        }
-
-        protected void CreateUserWizard1_CreatedUser(object sender, EventArgs e)
-        {
-
-        }
     }
 }

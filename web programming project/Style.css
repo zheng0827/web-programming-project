@@ -1,52 +1,93 @@
-﻿body.home {
-    margin: 0;
-    display: flex;
-    font-size: large;
-    flex-direction: column;
-    justify-content: center; /* 垂直置中 */
-    align-items: center; /* 水平置中 */
-    min-height: 100vh;
-}
-form.home {
-    display: flex;
-}
-div.form-container {
-    display: flex;
-    gap: 50px; /* 控制兩個表單間距 */
-    flex-wrap: wrap;
-}
-#Login1 {
-    background-color: #808080;
-    border-radius: 25px;
-}
-#CreateUserWizard1 {
-    background-color: #808080;
-    border-radius: 25px;
-}
+﻿/* 頁面 */
 body {
     margin: 0;
+    height: 100vh;
+    overflow: hidden;
 }
+
+/* 標題(MAIN COLOR: #0f172a)*/
 div.title {
     font-size: x-large;
-    height: fit-content;
     width: 100%;
     background-color: aquamarine;
-    padding-top: 10px;
-    padding-left: 25px;
-    padding-bottom: 10px;
+    padding: 10px 0px 10px 25px;
+    position: fixed;
+    height: 48px;
 }
+
+/* 主內容(MAIN COLOR: #0f172a)*/
 div.content {
-    margin: 0;
-    height:;
-    width: 100%;
+    width: 100vw;
     display: flex;
     background-color: antiquewhite;
+    position: absolute;
+    top: 48px;
+    height: calc(100vh - 48px);
+    overflow: hidden;
 }
+
+/* 主內容-左邊 */
 div.left {
     background-color: black;
     width: 10%;
+    height: 100%;
+    overflow: hidden;
 }
+
+/* 主內容-左邊-月份選單 */
+.chooseMonth {
+    width: 80%;
+    padding: 5px;
+    display: block;
+    font-size: large;
+    margin: 20px auto;
+    background-color: dimgray;
+}
+
+/* 主內容-中間 */
 div.main {
     background-color: #ff0000;
-    width: 90%;
+    width: 70%;
+    height: 100%;
+    overflow-y: auto; /* 垂直可滑動 */
+    overflow-x: hidden;
+}
+
+/* 主內容-中間-上部分 */
+div.top {
+    background-color: #0f172a; /* MAIN COLOR */
+    font-size: large;
+    padding: 20px 10px 20px 10px;
+    display: flex;
+    justify-content: center;
+    gap: 75px;
+}
+/* 主內容-中間-上部分-內文 */
+.top-text {
+    font-size: xx-large;
+    text-align: center;
+    align-content: center;
+    width: 100%;
+    height: 90px;
+}
+/* 主內容-中間-上部分-盒子 */
+div.top-box {
+    background-color: #1E293B;
+    color: #E2E8F0; 
+    padding: 15px;
+    width: 100px;
+    height: 100px;
+}
+
+/* 主內容-中間-下部分 */
+div.bottom {
+
+}
+
+/* 主內容-右邊(MAIN COLOR: #0f172a) */
+div.right {
+    background-color: #ff00ff;
+    width: 20%;
+    height: 100%;
+    overflow: hidden; /* 不可滑動 */
 }
