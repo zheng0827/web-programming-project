@@ -43,10 +43,36 @@
                 </div>
             </div>
             <div class="bottom">
+                <asp:Repeater ID="Repeater1" runat="server">
+                </asp:Repeater>
             </div>
             <br />
         </div>
         <div class="right">
+            <asp:Button ID="Button1" runat="server" Text="Button" />
+            <br />
+            <asp:Button ID="Button2" runat="server" Text="Button" />
+            <br />
+            <asp:Label ID="Label5" runat="server" Text="Label"></asp:Label>
+            <br />
+            <asp:DropDownList ID="DropDownList2" runat="server">
+            </asp:DropDownList>
+            <br />
+            <asp:Label ID="Label6" runat="server" Text="Label"></asp:Label>
+            <br />
+            <asp:TextBox ID="TextBox1" runat="server"></asp:TextBox>
+            <br />
+            <asp:Label ID="Label7" runat="server" Text="Label"></asp:Label>
+            <br />
+            <asp:TextBox ID="TextBox2" runat="server"></asp:TextBox>
+            <br />
+            <br />
+            <asp:Button ID="Button3" runat="server" Text="Button" />
+            <br />
+            <asp:Button ID="Button4" runat="server" Text="Button" />
+            <br />
+            <asp:Button ID="Button5" runat="server" Text="Button" />
+            <br />
         </div>
     </div>
     </form>
