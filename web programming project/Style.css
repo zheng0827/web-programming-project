@@ -1,115 +1,226 @@
 ﻿.main::-webkit-scrollbar {
     display: none;
 }
-
-/* 頁面 */
+/* =============== 頁面 =============== */
 body {
     margin: 0;
     height: 100vh;
     overflow: hidden;
 }
 
-/* 標題(MAIN COLOR: #0f172a)*/
+/* =============== 標題 =============== */
 div.title {
     font-size: x-large;
-    width: 100%;
-    background-color: aquamarine;
+    width: 100vw;
+    background-color: #0a1120;
+    color: #ffffff;
     padding: 10px 0px 10px 25px;
     position: fixed;
     height: 48px;
 }
 
-/* 主內容(MAIN COLOR: #0f172a)*/
+
+/* =============== 主內容(100vw) =============== */
 div.content {
     width: 100vw;
     display: flex;
-    background-color: antiquewhite;
+    background-color: #0f172a;
+    color: #ffffff;
     position: absolute;
     top: 48px;
     height: calc(100vh - 48px);
     overflow: hidden;
 }
 
-/* 主內容-左邊 */
-div.left {
-    background-color: black;
-    width: 10%;
+/* ========== 選單(250px) ========== */
+div.sidebar {
+    background-color: #1e293b;
+    width: 250px;
     height: 100%;
     overflow: hidden;
 }
 
-/* 主內容-左邊-月份選單 */
+/* 月份選單 下拉選單 */
 .chooseMonth {
     width: 80%;
     padding: 5px;
     display: block;
     font-size: large;
     margin: 20px auto;
+    border-radius: 10px;
     background-color: dimgray;
 }
-
-/* 主內容-中間 */
-div.main {
-    background-color: #ff0000;
-    width: 70%;
-    height: 100%;
-    overflow-y: auto; /* 垂直可滑動 */
-    overflow-x: hidden;
-}
-
-/* 主內容-中間-上部分 */
-div.top {
-    background-color: #0f172a; /* MAIN COLOR */
-    font-size: large;
-    padding: 20px 10px 20px 10px;
+/* 選擇年份 */
+.changeYear {
+    justify-self: center;
+    text-align: center;
     display: flex;
-    justify-content: center;
-    gap: 75px;
+    width: 90%;
+    padding: 10px 0;
 }
-/* 主內容-中間-上部分-內文 */
+/* 選擇年份按鈕 */
+.yearButton {
+    background-color: transparent;
+    color: #ffffff;
+    font-size: x-large;
+    border: none;
+    cursor: pointer;
+}
+/* 選擇年份標籤 */
+.yearLabel {
+    font-size: x-large;
+    flex: 1;
+}
+
+/* 隱藏radioButton的圓圈 */
+.RBLChooseMonth input[type="radio"] {
+    display: none;
+}
+/* 選擇月份 */
+.RBLChooseMonth {
+    display: grid; /* 表格顯示 */
+    grid-template-columns: 1fr 1fr 1fr; /* 一行顯示三個，每個大小皆為 1fr(比例單位) */
+    gap: 5px;
+    width: 90%;
+    padding: 12.5px;
+}
+    /* 選擇月份標籤 */
+    .RBLChooseMonth label {
+        border-radius: 5px;
+        width: 90%;
+        box-sizing: border-box;
+        border: 2px solid #334155;
+        color: #334155;
+        text-align: center;
+        margin: 2px;
+    }
+    /* 被選中的月份 */
+    .RBLChooseMonth input[type="radio"]:checked + label {
+        background: #334155;
+        color: white;
+    }
+
+/* ========== 中間(calc(100vw - 250px - 250px)) ========== */
+div.main {
+    width: calc(100vw - 250px - 250px);
+    height: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+    justify-items: center;
+}
+
+/* ===== 上部分 ===== */
+div.top {
+    width: 90%;
+    font-size: large;
+    margin: 20px 10px;
+    display: grid; /* 表格顯示 */
+    grid-template-columns: 1fr 1fr 1fr; /* 一行顯示三個，每個大小皆為 1fr(比例單位) */
+    gap: 25px;
+}
+/* 內文 */
 .top-text {
-    font-size: xx-large;
+    width: 100%;
+    height: auto;
+    min-height: 90px;
     text-align: center;
     align-content: center;
-    width: 100%;
-    height: 90px;
+    word-break: break-all; /* 溢出邊框的字元斷行 */
+    overflow-wrap: break-word; /* 溢出邊框的字元斷行 */
 }
-/* 主內容-中間-上部分-盒子 */
+/* 盒子 */
 div.top-box {
-    background-color: #1E293B;
-    color: #E2E8F0;
+    font-size: x-large;
+    background-color: #1e293b;
+    width: 1fr;
+    height: auto;
+    min-height: 100px;
+    border-radius: 10px;
     padding: 15px;
+}
+
+/* ===== 分隔線 ===== */
+.line {
+    border: 0;
+    height: 4px;
+    background-color: #1e293b;
+    margin: 20px 0;
+    width: 90%;
+}
+
+/* ===== 下部分 ===== */
+div.bottom {
+    width: 90%;
+}
+/* === 根據日期產生的主要區塊 === */
+.date {
+    margin: 10px 0;
+}
+/* 日期標籤 */
+.date-label {
+    border-left-style: solid;
+    border-left-width: 4px;
+    border-left-color: #09a5ff;
+    padding-left: 10px;
+}
+/* === 根據當日明細產生的子區塊 === */
+.record {
+    background-color: #1e293b;
+    align-items: center;
+    display: flex;
+    height: auto;
+    border-radius: 10px;
+    min-height: 50px;
+    margin: 10px 0;
+    padding: 10px;
+    gap: 5px;
+}
+    /* 滑鼠在子區塊上 */
+    .record:hover {
+        background-color: #454963;
+    }
+/* 類別顯示 */
+.category {
+    text-align: center;
+    width: auto;
+    min-width: 50px;
+}
+/* 備註顯示 */
+.description {
+    overflow-x: hidden;
+    flex: 1;
+}
+/* 金額顯示 */
+.amount {
+    text-align: center;
+    width: auto;
+    min-width: 50px;
+}
+/* 按鈕顯示 */
+.button {
+    border: none;
+    text-align: center;
     width: 100px;
-    height: 100px;
 }
 
-/* 主內容-中間-下部分 */
-div#main.bottom {
-    background-color: #808080;
-    padding: 25px;
-    height: 100%;
-}
 
-/* 主內容-右邊(MAIN COLOR: #0f172a) */
+/* =============== 右邊面板(250px) =============== */
 div.right {
-    background-color: #ff00ff;
+    background-color: #1e293b;
     justify-content: center;
-    width: 20vw;
+    font-size: large;
+    width: 250px;
     height: 100%;
     padding: 10px;
-    overflow: hidden; /* 不可滑動 */
+    overflow: hidden; /* 設為不可滑動 */
 }
 
-/* 主內容-右邊-選擇收支 */
+/* ========== 選擇收支 ========== */
 .chooseType {
-    background-color: #ffffff;
+    background-color: #334155;
     justify-content: center;
-    text-align: center;
-    font-size: large;
     border-radius: 5px;
-    padding: 7.5px;
     display: flex;
-    width: 100%;
 }
 
     /* 讓圓形圈圈消失 */
@@ -118,18 +229,20 @@ div.right {
     }
     /* 不知道為什麼1一定要在0前面。*/
     .chooseType label {
+        display: block;
+        text-align: center;
         cursor: pointer;
         border-radius: 5px;
-        padding: 7.5px 2.75vw 7.5px 2.75vw;
+        padding: 5px 2vw;
     }
         /* "for"值最後結尾為"1"的label */
         .chooseType label[for$="1"] {
-            margin: 10px 10px 10px 0;
+            margin: 5px 5px 5px 0;
             color: green;
         }
         /* "for"值最後結尾為"0"的label */
         .chooseType label[for$="0"] {
-            margin: 10px 0 10px 10px;
+            margin: 5px 0 5px 5px;
             color: red;
         }
 
@@ -145,3 +258,46 @@ div.right {
         color: white;
     }
 
+/* ========== 輸入資料 ========== */
+div.form, .chooseCategory {
+    max-width: 245px;
+    width: auto;
+}
+
+    div.form input, .DDLChooseCategory {
+        background-color: #334155;
+        color-scheme: dark;
+        color: #ffffff;
+        font-size: large;
+        width: 100%;
+        height: 30px;
+        box-sizing: border-box;
+        padding-inline-start: 15px;
+        border: none;
+        border-radius: 5px;
+    }
+
+/* ========== 動作按鈕 ========== */
+div.actionButton {
+    justify-content: center;
+    display: flex;
+    gap: 1.5vw;
+}
+    /* 按鈕樣式 */
+    div.actionButton input {
+        width: calc((20vw - 20px - 20px)/3);
+        background-color: transparent;
+        border-block-width: 3px;
+        border: none;
+        padding: 5px 0;
+    }
+        /* 取消按鈕 */
+        div.actionButton input[id="cancel"] {
+            background-color: dimgray;
+            color: white;
+        }
+        /* 儲存按鈕 */
+        div.actionButton input[id="save"] {
+            background-color: green;
+            color: white;
+        }

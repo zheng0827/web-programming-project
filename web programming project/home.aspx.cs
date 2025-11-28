@@ -11,29 +11,55 @@ namespace web_programming_project
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            testBindData();
+            if (!IsPostBack)
+            {
+                testBindData();
+            }
         }
 
         private void testBindData()
         {
-            // 假設這是您從資料庫撈出來的 DataTable 或 List
-            // 這裡我們模擬剛剛初始化的那 5 筆資料
-            var dataFromDb = new[]
+            var dateList = new[]
             {
-                new { category = "測試一", description = "test1@example.com", date = DateTime.Now ,amount = 0},
-                new { category = "測試二", description = "test2@example.com", date = DateTime.Now ,amount = 1},
-                new { category = "測試三", description = "test3@example.com", date = DateTime.Now ,amount = 2},
-                new { category = "測試四", description = "test4@example.com", date = DateTime.Now ,amount = 3},
-                new { category = "測試五", description = "test5@example.com", date = DateTime.Now ,amount = 4}
-            };
+            new { date = DateTime.Now.AddDays(-2) },
+            new { date = DateTime.Now.AddDays(-1) },
+            new { date = DateTime.Now }
+        };
 
-            Repeater1.DataSource = dataFromDb;
-            Repeater1.DataBind();
+            DateRepeater.DataSource = dateList;
+            DateRepeater.DataBind();
+        }
+        protected void DateRepeater_ItemDataBound(object sender, RepeaterItemEventArgs e)
+        {
+            // 找到內層的 Repeater
+            Repeater innerRepeater = (Repeater)e.Item.FindControl("DetailRepeater");
+            // 找到日期物件
+            object dateObj = DataBinder.Eval(e.Item.DataItem, "date");
+            DateTime currentDate = Convert.ToDateTime(dateObj);
+            // 模擬資料庫
+            var detailData = new[] {
+                new {category = "飲食", description = "午餐便當", amount = 100},
+                new { category = "交通", description = "捷運儲值", amount = 500 },
+                new { category = "交通", description = "儲值", amount = 500 },
+                new { category = "娛樂", description = "看電影", amount = 300 }
+            };
+            innerRepeater.DataSource = detailData;
+            innerRepeater.DataBind();
         }
 
-        protected void RadioButtonList1_SelectedIndexChanged(object sender, EventArgs e)
+        protected void chooseMonth_SelectedIndexChanged(object sender, EventArgs e)
         {
-            
+
+        }
+
+        protected void cancel_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        protected void save_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }
