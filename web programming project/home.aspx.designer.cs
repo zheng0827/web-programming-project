@@ -42,6 +42,15 @@ namespace web_programming_project
         protected global::System.Web.UI.WebControls.Label monthTitle;
 
         /// <summary>
+        /// currentYearMonth 控制項。
+        /// </summary>
+        /// <remarks>
+        /// 自動產生的欄位。
+        /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.HiddenField currentYearMonth;
+
+        /// <summary>
         /// chooseMonth 控制項。
         /// </summary>
         /// <remarks>
@@ -78,22 +87,22 @@ namespace web_programming_project
         protected global::System.Web.UI.WebControls.Button nextYear;
 
         /// <summary>
-        /// RadioButtonList2 控制項。
+        /// RBLChooseMonth 控制項。
         /// </summary>
         /// <remarks>
         /// 自動產生的欄位。
         /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.RadioButtonList RadioButtonList2;
+        protected global::System.Web.UI.WebControls.RadioButtonList RBLChooseMonth;
 
         /// <summary>
-        /// i 控制項。
+        /// incomeLabel 控制項。
         /// </summary>
         /// <remarks>
         /// 自動產生的欄位。
         /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label i;
+        protected global::System.Web.UI.WebControls.Label incomeLabel;
 
         /// <summary>
         /// Label3 控制項。
@@ -105,13 +114,13 @@ namespace web_programming_project
         protected global::System.Web.UI.WebControls.Label Label3;
 
         /// <summary>
-        /// e 控制項。
+        /// expenseLabel 控制項。
         /// </summary>
         /// <remarks>
         /// 自動產生的欄位。
         /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label e;
+        protected global::System.Web.UI.WebControls.Label expenseLabel;
 
         /// <summary>
         /// Label2 控制項。
@@ -123,13 +132,13 @@ namespace web_programming_project
         protected global::System.Web.UI.WebControls.Label Label2;
 
         /// <summary>
-        /// t 控制項。
+        /// totalLabel 控制項。
         /// </summary>
         /// <remarks>
         /// 自動產生的欄位。
         /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label t;
+        protected global::System.Web.UI.WebControls.Label totalLabel;
 
         /// <summary>
         /// Label4 控制項。
@@ -168,6 +177,15 @@ namespace web_programming_project
         protected global::System.Web.UI.WebControls.Label Label5;
 
         /// <summary>
+        /// RequiredFieldValidator_Ca 控制項。
+        /// </summary>
+        /// <remarks>
+        /// 自動產生的欄位。
+        /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator RequiredFieldValidator_Ca;
+
+        /// <summary>
         /// chooseCategory 控制項。
         /// </summary>
         /// <remarks>
@@ -186,6 +204,15 @@ namespace web_programming_project
         protected global::System.Web.UI.WebControls.Label DATE_;
 
         /// <summary>
+        /// RequiredFieldValidator_Date 控制項。
+        /// </summary>
+        /// <remarks>
+        /// 自動產生的欄位。
+        /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator RequiredFieldValidator_Date;
+
+        /// <summary>
         /// date0 控制項。
         /// </summary>
         /// <remarks>
@@ -202,6 +229,24 @@ namespace web_programming_project
         /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label AMOUNT_;
+
+        /// <summary>
+        /// RangeValidator1 控制項。
+        /// </summary>
+        /// <remarks>
+        /// 自動產生的欄位。
+        /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RangeValidator RangeValidator1;
+
+        /// <summary>
+        /// RequiredFieldValidator_Amount 控制項。
+        /// </summary>
+        /// <remarks>
+        /// 自動產生的欄位。
+        /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator RequiredFieldValidator_Amount;
 
         /// <summary>
         /// amount0 控制項。
@@ -247,5 +292,14 @@ namespace web_programming_project
         /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button save;
+
+        /// <summary>
+        /// ValidationSummary1 控制項。
+        /// </summary>
+        /// <remarks>
+        /// 自動產生的欄位。
+        /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.ValidationSummary ValidationSummary1;
     }
 }
