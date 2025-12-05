@@ -68,32 +68,22 @@ namespace web_programming_project
             setCurrentYearMonth(currentYear, currentMonth); // 設定隱藏欄位的值
 
             monthTitle.Text = currentYear + " 年 " + currentMonth + " 月 記帳本"; // 設定標題
-            testBindData(); // 綁定明細資料
+            BindDetailData(); // 綁定明細資料
         }
 
         protected void BindDetailData()
         {
-            // 取得目前選擇的年份與月份
             int year = getCurrentYearMonth()[0];
             int month = getCurrentYearMonth()[1];
 
-            // 這裡可以加入從資料庫取得資料的程式碼，並將資料綁定到 Repeater 控制項
+            SqlDataSource dateData = getDate(year, month);
+
+            DateRepeater.DataSource = dateData;
+            DateRepeater.DataBind();
         }
         protected SqlDataSource getDate(int Year, int Month)
         {
             string sql = @"SELECT DISTINCT [Month], [Day] FROM [Details] WHERE [Year] = @Year AND [Month] = @Month ORDER BY [Day] DESC";
-
-            SqlDataSource1.SelectCommand = sql;
-
-            SqlDataSource1.SelectParameters.Clear();
-            SqlDataSource1.SelectParameters.Add("Year", System.Data.DbType.Int32, Year.ToString());
-            SqlDataSource1.SelectParameters.Add("Month", System.Data.DbType.Int32, Month.ToString());
-
-            return SqlDataSource1;
-        }
-        protected SqlDataSource getDetail(int Year, int Month)
-        {
-            string sql = @"SELECT * FROM [Details] WHERE [Year] = @Year AND [Month] = @Month ORDER BY [ID] DESC";
 
             SqlDataSource1.SelectCommand = sql;
 
@@ -143,18 +133,8 @@ namespace web_programming_project
                 yearLabel.Text = currentYear.ToString(); // 設定年份標籤
                 RBLChooseMonth.SelectedIndex = currentMonth - 1; // 設定選擇的月份
 
-                testBindData();
+                BindDetailData();
             }
-        }
-
-        private void testBindData()
-        {
-            int year = getCurrentYearMonth()[0];
-            int month = getCurrentYearMonth()[1];
-            SqlDataSource db = getDate(year, month);
-
-            DateRepeater.DataSource = db;
-            DateRepeater.DataBind();
         }
         protected void DateRepeater_ItemDataBound(object sender, RepeaterItemEventArgs e)
         {
@@ -165,19 +145,19 @@ namespace web_programming_project
             Repeater innerRepeater = (Repeater)e.Item.FindControl("DetailRepeater");
             // 找到日期物件
             //int day = int.Parse(e.Item.F);
-            SqlDataSource db = getDetailByDay(year, month,1);
+            SqlDataSource detailData = getDetailByDay(year, month,1);
             // 模擬資料庫
             //color #198754 green 收
             //color #ff0000 red 支
             Color Red = ColorTranslator.FromHtml("#ff0000");
             Color Green = ColorTranslator.FromHtml("#198754");
-            var detailData = new[] {
+            var detailData111 = new[] {
                 new {category = "飲食", description = "午餐便當", amount = 100, color = Red},
                 new { category = "交通", description = "捷運儲值", amount = 500 , color = Green},
                 new { category = "交通", description = "儲值", amount = 500 , color = Red},
                 new { category = "娛樂", description = "看電影", amount = 300 , color = Green}
             };
-            innerRepeater.DataSource = detailData;
+            innerRepeater.DataSource = detailData111;
             innerRepeater.DataBind();
         }
 
