@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics.Tracing;
 using System.Drawing;
+using System.Globalization;
 using System.Linq;
 using System.Web;
 using System.Web.UI;
@@ -12,7 +14,8 @@ namespace web_programming_project
     public partial class home : System.Web.UI.Page
     {
         private string connectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=|DataDirectory|\Database1.mdf;Integrated Security=True";
-
+        private List<Dictionary<string, string>> category = new List<Dictionary<string, string>>();
+        
         // 透過隱藏項 currentYearMonth，取得目前選擇的年份與月份
         // 回傳格式: List<int> { year, month }
         protected List<int> getCurrentYearMonth()
@@ -51,7 +54,7 @@ namespace web_programming_project
             if (selectedYear - DateTime.Now.Year < 10) yearLabel.Text = (selectedYear + 1).ToString(); // 設定年份標籤，但有後10年內的限制
             if (int.Parse(yearLabel.Text) == currentYear) RBLChooseMonth.SelectedIndex = currentMonth - 1; // 回到當前年份時，設定月份選擇
         }
-        // 選擇月份RadioButton事件
+        // 選擇月份 RadioButton 事件
         protected void RBLChooseMonth_SelectedIndexChanged(object sender, EventArgs eq)
         {
             int currentYear = getCurrentYearMonth()[0];
@@ -65,11 +68,70 @@ namespace web_programming_project
             setCurrentYearMonth(currentYear, currentMonth); // 設定隱藏欄位的值
 
             monthTitle.Text = currentYear + " 年 " + currentMonth + " 月 記帳本"; // 設定標題
+            BindDetailData(); // 綁定明細資料
+        }
+
+        protected void BindDetailData()
+        {
+            // 取得目前選擇的年份與月份
+            int year = getCurrentYearMonth()[0];
+            int month = getCurrentYearMonth()[1];
+
+            // 這裡可以加入從資料庫取得資料的程式碼，並將資料綁定到 Repeater 控制項
+        }
+        protected SqlDataSource getDate(int Year, int Month)
+        {
+            string sql = @"SELECT DISTINCT [Month], [Day] FROM [Details] WHERE [Year] = @Year AND [Month] = @Month ORDER BY [Day] DESC";
+
+            SqlDataSource1.SelectCommand = sql;
+
+            SqlDataSource1.SelectParameters.Clear();
+            SqlDataSource1.SelectParameters.Add("Year", System.Data.DbType.Int32, Year.ToString());
+            SqlDataSource1.SelectParameters.Add("Month", System.Data.DbType.Int32, Month.ToString());
+
+            return SqlDataSource1;
+        }
+        protected SqlDataSource getDetail(int Year, int Month)
+        {
+            string sql = @"SELECT * FROM [Details] WHERE [Year] = @Year AND [Month] = @Month ORDER BY [ID] DESC";
+
+            SqlDataSource1.SelectCommand = sql;
+
+            SqlDataSource1.SelectParameters.Clear();
+            SqlDataSource1.SelectParameters.Add("Year", System.Data.DbType.Int32, Year.ToString());
+            SqlDataSource1.SelectParameters.Add("Month", System.Data.DbType.Int32, Month.ToString());
+
+            return SqlDataSource1;
+        }
+        protected SqlDataSource getDetailByDay(int Year, int Month, int Day)
+        {
+            string sql = @"SELECT * FROM [Details] WHERE [Year] = @Year AND [Month] = @Month AND [Day] = @Day ORDER BY [ID] DESC";
+
+            SqlDataSource1.SelectCommand = sql;
+
+            SqlDataSource1.SelectParameters.Clear();
+            SqlDataSource1.SelectParameters.Add("Year", System.Data.DbType.Int32, Year.ToString());
+            SqlDataSource1.SelectParameters.Add("Month", System.Data.DbType.Int32, Month.ToString());
+            SqlDataSource1.SelectParameters.Add("Day", System.Data.DbType.Int32, Day.ToString());
+
+            return SqlDataSource1;
         }
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!IsPostBack)//第一次進入頁面
             {
+                category.Add(new Dictionary<string, string>() { { "c1", "早餐" } });
+                category.Add(new Dictionary<string, string>() { { "c2", "午餐" } });
+                category.Add(new Dictionary<string, string>() { { "c3", "晚餐" } });
+
+                category.Add(new Dictionary<string, string>() { { "c4", "購物" } });
+                category.Add(new Dictionary<string, string>() { { "c5", "醫療" } });
+                category.Add(new Dictionary<string, string>() { { "c6", "點心" } });
+                category.Add(new Dictionary<string, string>() { { "c7", "娛樂" } });
+                category.Add(new Dictionary<string, string>() { { "c8", "交通" } });
+                category.Add(new Dictionary<string, string>() { { "c9", "社交" } });
+                category.Add(new Dictionary<string, string>() { { "c10", "數位服務" } });
+
                 int currentYear = DateTime.Now.Year; // 取得目前年份
                 int currentMonth = DateTime.Now.Month; // 取得目前月份
                 setCurrentYearMonth(currentYear, currentMonth); // 設定隱藏欄位的值
@@ -83,21 +145,23 @@ namespace web_programming_project
 
         private void testBindData()
         {
-            var dateList = new[]
-            {
-            new { date = DateTime.Now.AddDays(-2) },
-            new { date = DateTime.Now.AddDays(-1) },
-            new { date = DateTime.Now }
-        };
+            int year = getCurrentYearMonth()[0];
+            int month = getCurrentYearMonth()[1];
+            SqlDataSource db = getDate(year, month);
 
-            DateRepeater.DataSource = dateList;
+            DateRepeater.DataSource = db;
             DateRepeater.DataBind();
         }
         protected void DateRepeater_ItemDataBound(object sender, RepeaterItemEventArgs e)
         {
+            int year = getCurrentYearMonth()[0];
+            int month = getCurrentYearMonth()[1];
+
             // 找到內層的 Repeater
             Repeater innerRepeater = (Repeater)e.Item.FindControl("DetailRepeater");
             // 找到日期物件
+            int day = int.Parse(e.Item.F);
+            SqlDataSource db = getDetailByDay(year, month,1);
             object dateObj = DataBinder.Eval(e.Item.DataItem, "date");
             DateTime currentDate = Convert.ToDateTime(dateObj);
             // 模擬資料庫
@@ -122,7 +186,11 @@ namespace web_programming_project
 
         protected void cancel_Click(object sender, EventArgs e)
         {
-
+            RadioButtonList1.SelectedIndex = 0;
+            chooseCategory.SelectedIndex = -1;
+            date0.Text = "";
+            amount0.Text = "";
+            description0.Text = "";
         }
 
         protected void save_Click(object sender, EventArgs e)

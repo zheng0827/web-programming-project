@@ -10,7 +10,7 @@
 </head>
 <body>
     <form id="form1" runat="server" submitdisabledcontrols="False">
-        <asp:SqlDataSource ID="SqlDataSource1" runat="server"></asp:SqlDataSource>
+        <asp:SqlDataSource ID="SqlDataSource1" runat="server" ConnectionString="Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=|DataDirectory|\Database1.mdf;Integrated Security=True" ProviderName="System.Data.SqlClient" SelectCommand="SELECT * FROM [Details]"></asp:SqlDataSource>
         <!-- 標題 -->
         <div class="title">
             <asp:Label ID="monthTitle" runat="server" Text="monthTitle"></asp:Label>
@@ -20,8 +20,8 @@
         <div class="content">
             <!-- 左側 -->
             <div class="sidebar">
-                <asp:DropDownList ID="chooseMonth" runat="server" CssClass="chooseMonth">
-                </asp:DropDownList>
+                <!--<asp:DropDownList ID="chooseMonth" runat="server" CssClass="chooseMonth">
+                </asp:DropDownList> -->
 
                 <div class="changeYear">
                     <asp:Button ID="prevYear" runat="server" Text="&lt;" CssClass="yearButton" CausesValidation="False" OnClick="prevYear_Click" />
@@ -81,7 +81,7 @@
                     <asp:Repeater ID="DateRepeater" runat="server" OnItemDataBound="DateRepeater_ItemDataBound">
                         <ItemTemplate>
                             <div class="date">
-                                <asp:Label ID="Label8" runat="server" Text='<%# Eval("date") %>' CssClass="date-label"></asp:Label>
+                                <asp:Label ID="Label8" runat="server" Text='<%# Eval("DateTitle") %>' CssClass="date-label"></asp:Label>
                                 <br />
                                 <asp:Repeater ID="DetailRepeater" runat="server">
                                     <ItemTemplate>
@@ -141,7 +141,7 @@
                     <br />
                     <asp:Label ID="Label1" runat="server" Text="備註"></asp:Label>
                     <br />
-                    <asp:TextBox ID="TextBox1" runat="server"></asp:TextBox>
+                    <asp:TextBox ID="description0" runat="server"></asp:TextBox>
                 </div>
                 <br />
                 <div class="actionButton">
