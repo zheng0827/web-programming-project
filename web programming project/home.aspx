@@ -54,7 +54,7 @@
                     <div class="top-box">
                         <asp:Label ID="incomeLabel" runat="server" Text="收入"></asp:Label>
                         <div class="top-text">
-                            <asp:Label ID="Label3" runat="server" Text="0" ForeColor="#198754"></asp:Label>
+                            <asp:Label ID="income" runat="server" Text="0" ForeColor="#198754"></asp:Label>
                         </div>
                         <br />
                     </div>
@@ -62,14 +62,14 @@
                     <div class="top-box">
                         <asp:Label ID="expenseLabel" runat="server" Text="支出"></asp:Label>
                         <div class="top-text">
-                            <asp:Label ID="Label2" runat="server" Text="0" ForeColor="#ff0000"></asp:Label>
+                            <asp:Label ID="expense" runat="server" Text="0" ForeColor="#b80404"></asp:Label>
                         </div>
                     </div>
                     <!-- 結餘 -->
                     <div class="top-box">
                         <asp:Label ID="totalLabel" runat="server" Text="結餘"></asp:Label>
                         <div class="top-text">
-                            <asp:Label ID="Label4" runat="server" Text="0" ForeColor="#0d6efd"></asp:Label>
+                            <asp:Label ID="total" runat="server" Text="0" ForeColor="#0d6efd"></asp:Label>
                         </div>
                         <br />
                     </div>
@@ -93,11 +93,11 @@
                                                 <asp:Label ID="Descriptionl" runat="server" Text='<%# Eval("description") %>'></asp:Label>
                                             </div>
                                             <div class="amount">
-                                                <asp:Label ID="amountLabel" runat="server" Text='<%# Eval("amount") %>' ForeColor='<%# Eval("color") %>' ></asp:Label>
+                                                <asp:Label ID="amountLabel" runat="server" Text='<%# Eval("amount") %>' ForeColor='<%# Eval("color") %>'></asp:Label>
                                             </div>
                                             <div class="button">
-                                                <asp:Button ID="edit" runat="server" Text="編輯" CausesValidation="False" />
-                                                <asp:Button ID="delete" runat="server" Text="刪除" CausesValidation="False" />
+                                                <!--<asp:Button ID="edit" runat="server" Text="編輯" CausesValidation="False" />-->
+                                                <asp:Button ID="delete" runat="server" Text="刪除" CausesValidation="False" CssClass="deleteButton" />
                                             </div>
                                         </div>
                                     </ItemTemplate>
@@ -111,7 +111,7 @@
             <!-- 右側 -->
             <div class="right">
                 <!-- 收支選擇 -->
-                <asp:RadioButtonList ID="RadioButtonList1" runat="server" RepeatDirection="Horizontal" CssClass="chooseType" RepeatLayout="Flow">
+                <asp:RadioButtonList ID="RadioButtonList1" runat="server" RepeatDirection="Horizontal" CssClass="chooseType" RepeatLayout="Flow" AutoPostBack="True" OnSelectedIndexChanged="RadioButtonList1_SelectedIndexChanged">
                     <asp:ListItem Value="expense" Selected="True" Text="支出"></asp:ListItem>
                     <asp:ListItem Value="income" Text="收入"></asp:ListItem>
                 </asp:RadioButtonList>
@@ -145,10 +145,10 @@
                 </div>
                 <br />
                 <div class="actionButton">
-                    <asp:Button ID="cancel" runat="server" Text="取消" CausesValidation="False" />
-                    <asp:Button ID="save" runat="server" Text="儲存" />
+                    <asp:Button ID="cancel" runat="server" Text="取消" CausesValidation="False" OnClick="cancel_Click" />
+                    <asp:Button ID="save" runat="server" Text="儲存" OnClick="save_Click" />
                 </div>
-                    <asp:ValidationSummary ID="ValidationSummary1" runat="server" />
+                <asp:ValidationSummary ID="ValidationSummary1" runat="server" />
             </div>
 
         </div>

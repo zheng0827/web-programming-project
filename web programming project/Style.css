@@ -6,6 +6,7 @@ body {
     margin: 0;
     height: 100vh;
     overflow: hidden;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 /* =============== 標題 =============== */
@@ -131,6 +132,7 @@ div.top {
 /* 盒子 */
 div.top-box {
     font-size: x-large;
+    font-weight: 500;
     background-color: #1e293b;
     width: 1fr;
     height: auto;
@@ -158,6 +160,7 @@ div.bottom {
 }
 /* 日期標籤 */
 .date-label {
+    font-weight: bold;
     border-left-style: solid;
     border-left-width: 4px;
     border-left-color: #09a5ff;
@@ -177,13 +180,13 @@ div.bottom {
 }
     /* 滑鼠在子區塊上 */
     .record:hover {
-        background-color: #454963;
+        background-color: #2b3b54;
     }
 /* 類別顯示 */
 .category {
     text-align: center;
     width: auto;
-    min-width: 50px;
+    min-width: 100px;
 }
 /* 備註顯示 */
 .description {
@@ -192,9 +195,10 @@ div.bottom {
 }
 /* 金額顯示 */
 .amount {
+    font-weight: bold;
     text-align: center;
     width: auto;
-    min-width: 50px;
+    min-width: 100px;
 }
 /* 按鈕顯示 */
 .button {
@@ -202,7 +206,13 @@ div.bottom {
     text-align: center;
     width: 100px;
 }
-
+.deleteButton {
+    background-color: #b80404;
+    color: white;
+    border: hidden;
+    border-radius: 5px;
+    padding: 5px 10px;
+}
 
 /* =============== 右邊面板(250px) =============== */
 div.right {
@@ -243,7 +253,7 @@ div.right {
         /* "for"值最後結尾為"0"的label */
         .chooseType label[for$="0"] {
             margin: 5px 0 5px 5px;
-            color: red;
+            color: #b80404;
         }
 
     /* "for"值最後結尾為"1"的label，且被選中 */
@@ -254,7 +264,7 @@ div.right {
 
     /* "for"值最後結尾為"0"的label，且被選中 */
     .chooseType input[type="radio"]:checked + label[for$="0"] {
-        background: red;
+        background: #b80404;
         color: white;
     }
 

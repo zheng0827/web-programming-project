@@ -105,13 +105,13 @@ namespace web_programming_project
         protected global::System.Web.UI.WebControls.Label incomeLabel;
 
         /// <summary>
-        /// Label3 控制項。
+        /// income 控制項。
         /// </summary>
         /// <remarks>
         /// 自動產生的欄位。
         /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label Label3;
+        protected global::System.Web.UI.WebControls.Label income;
 
         /// <summary>
         /// expenseLabel 控制項。
@@ -123,13 +123,13 @@ namespace web_programming_project
         protected global::System.Web.UI.WebControls.Label expenseLabel;
 
         /// <summary>
-        /// Label2 控制項。
+        /// expense 控制項。
         /// </summary>
         /// <remarks>
         /// 自動產生的欄位。
         /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label Label2;
+        protected global::System.Web.UI.WebControls.Label expense;
 
         /// <summary>
         /// totalLabel 控制項。
@@ -141,13 +141,13 @@ namespace web_programming_project
         protected global::System.Web.UI.WebControls.Label totalLabel;
 
         /// <summary>
-        /// Label4 控制項。
+        /// total 控制項。
         /// </summary>
         /// <remarks>
         /// 自動產生的欄位。
         /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label Label4;
+        protected global::System.Web.UI.WebControls.Label total;
 
         /// <summary>
         /// DateRepeater 控制項。
