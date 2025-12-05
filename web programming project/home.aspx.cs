@@ -14,8 +14,8 @@ namespace web_programming_project
     public partial class home : System.Web.UI.Page
     {
         private string connectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=|DataDirectory|\Database1.mdf;Integrated Security=True";
-        private List<Dictionary<string, string>> category = new List<Dictionary<string, string>>();
-        
+        //private List<Dictionary<string, string>> category = new List<Dictionary<string, string>>();
+        private Dictionary<string, string> category = new Dictionary<string, string>();
         // 透過隱藏項 currentYearMonth，取得目前選擇的年份與月份
         // 回傳格式: List<int> { year, month }
         protected List<int> getCurrentYearMonth()
@@ -68,7 +68,7 @@ namespace web_programming_project
             setCurrentYearMonth(currentYear, currentMonth); // 設定隱藏欄位的值
 
             monthTitle.Text = currentYear + " 年 " + currentMonth + " 月 記帳本"; // 設定標題
-            BindDetailData(); // 綁定明細資料
+            testBindData(); // 綁定明細資料
         }
 
         protected void BindDetailData()
@@ -118,20 +118,23 @@ namespace web_programming_project
         }
         protected void Page_Load(object sender, EventArgs e)
         {
+            category.Add("c1", "早餐");
+            category.Add("c2", "午餐");
+            category.Add("c3", "晚餐");
+            category.Add("c4", "購物");
+            category.Add("c5", "醫療");
+            category.Add("c6", "點心");
+            category.Add("c7", "娛樂");
+            category.Add("c8", "交通");
+            category.Add("c9", "社交");
+            category.Add("c10", "數位服務");
+
+            chooseCategory.DataSource = category;
+            chooseCategory.DataTextField = "Value";
+            chooseCategory.DataValueField = "Key";
+            chooseCategory.DataBind();
             if (!IsPostBack)//第一次進入頁面
             {
-                category.Add(new Dictionary<string, string>() { { "c1", "早餐" } });
-                category.Add(new Dictionary<string, string>() { { "c2", "午餐" } });
-                category.Add(new Dictionary<string, string>() { { "c3", "晚餐" } });
-
-                category.Add(new Dictionary<string, string>() { { "c4", "購物" } });
-                category.Add(new Dictionary<string, string>() { { "c5", "醫療" } });
-                category.Add(new Dictionary<string, string>() { { "c6", "點心" } });
-                category.Add(new Dictionary<string, string>() { { "c7", "娛樂" } });
-                category.Add(new Dictionary<string, string>() { { "c8", "交通" } });
-                category.Add(new Dictionary<string, string>() { { "c9", "社交" } });
-                category.Add(new Dictionary<string, string>() { { "c10", "數位服務" } });
-
                 int currentYear = DateTime.Now.Year; // 取得目前年份
                 int currentMonth = DateTime.Now.Month; // 取得目前月份
                 setCurrentYearMonth(currentYear, currentMonth); // 設定隱藏欄位的值
@@ -139,6 +142,7 @@ namespace web_programming_project
                 monthTitle.Text = currentYear + " 年 " + currentMonth + " 月 記帳本"; // 設定標題
                 yearLabel.Text = currentYear.ToString(); // 設定年份標籤
                 RBLChooseMonth.SelectedIndex = currentMonth - 1; // 設定選擇的月份
+
                 testBindData();
             }
         }
@@ -160,10 +164,8 @@ namespace web_programming_project
             // 找到內層的 Repeater
             Repeater innerRepeater = (Repeater)e.Item.FindControl("DetailRepeater");
             // 找到日期物件
-            int day = int.Parse(e.Item.F);
+            //int day = int.Parse(e.Item.F);
             SqlDataSource db = getDetailByDay(year, month,1);
-            object dateObj = DataBinder.Eval(e.Item.DataItem, "date");
-            DateTime currentDate = Convert.ToDateTime(dateObj);
             // 模擬資料庫
             //color #198754 green 收
             //color #ff0000 red 支

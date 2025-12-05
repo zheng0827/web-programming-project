@@ -81,7 +81,7 @@
                     <asp:Repeater ID="DateRepeater" runat="server" OnItemDataBound="DateRepeater_ItemDataBound">
                         <ItemTemplate>
                             <div class="date">
-                                <asp:Label ID="Label8" runat="server" Text='<%# Eval("DateTitle") %>' CssClass="date-label"></asp:Label>
+                                <asp:Label ID="Label8" runat="server" Text='<%# Eval("Month", "{0:D2}") + "-" + Eval("Day", "{0:D2}") %>' CssClass="date-label"></asp:Label>
                                 <br />
                                 <asp:Repeater ID="DetailRepeater" runat="server">
                                     <ItemTemplate>
