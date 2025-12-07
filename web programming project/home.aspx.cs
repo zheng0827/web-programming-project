@@ -28,7 +28,7 @@ namespace web_programming_project
         private List<string> categoryListI = new List<string> {
             "薪水","獎金","禮金","投資","其他"
         };
-
+        
         /* ========= 透過隱藏項 currentYearMonth，取得/設置目前選擇的年份與月份 ========= */
 
         // 回傳格式: List<int> { year, month }
@@ -307,7 +307,7 @@ namespace web_programming_project
 
             SqlDataSource detailData = getDetail(year, month);
             DataView detailDataView = (DataView)detailData.Select(DataSourceSelectArguments.Empty);
-
+            
             int totalExpense = 0;
             int totalIncome = 0;
 
