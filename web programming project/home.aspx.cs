@@ -315,7 +315,7 @@ namespace web_programming_project
             {
                 string type = rowView["type"].ToString();
                 int amount = Convert.ToInt32(rowView["amount"]);
-
+                
                 if (type == "e")
                 {
                     totalExpense += amount;
