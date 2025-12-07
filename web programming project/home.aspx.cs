@@ -123,6 +123,8 @@ namespace web_programming_project
             Response.Redirect("home.aspx"); // 重新整理頁面
         }
 
+
+
         // 選擇月份 RadioButton 事件
         protected void RBLChooseMonth_SelectedIndexChanged(object sender, EventArgs eq)
         {
