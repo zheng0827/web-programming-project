@@ -325,7 +325,7 @@ namespace web_programming_project
                     totalIncome += amount;
                 }
             }
-
+            
             expense.Text = "-$" + totalExpense.ToString();
             income.Text = "+$" + totalIncome.ToString();
             total.Text = "$" + (totalIncome - totalExpense).ToString();
