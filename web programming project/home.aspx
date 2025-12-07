@@ -97,7 +97,7 @@
                                             </div>
                                             <div class="button">
                                                 <!--<asp:Button ID="edit" runat="server" Text="編輯" CausesValidation="False" />-->
-                                                <asp:Button ID="delete" runat="server" Text="刪除" CausesValidation="False" CssClass="deleteButton" />
+                                                <asp:Button ID="delete" runat="server" Text="刪除" CausesValidation="False" CssClass="deleteButton" CommandArgument='<%# Eval("ID") %>' CommandName="Delete" OnClick="delete_Click" />
                                             </div>
                                         </div>
                                     </ItemTemplate>

@@ -123,7 +123,46 @@ namespace web_programming_project
             Response.Redirect("home.aspx"); // 重新整理頁面
         }
 
+        protected SqlConnection getConn()
+        {
+            string connectionString = "Data Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename=|DataDirectory|\\Database1.mdf;Integrated Security=True";
 
+            return new SqlConnection(connectionString);
+        }
+
+        protected void delete_Click(object sender, EventArgs e)
+        {
+            Button btn = (Button)sender;
+
+            string recordId = btn.CommandArgument;
+
+            if (!string.IsNullOrEmpty(recordId))
+            { 
+                string deleteQuery = "DELETE FROM [Details] WHERE ID = @ID";
+
+                using (SqlConnection conn = getConn())
+                {
+                    using (SqlCommand cmd = new SqlCommand(deleteQuery, conn))
+                    {
+                        //傳遞字串 ID
+                        cmd.Parameters.AddWithValue("@ID", recordId);
+
+                        try
+                        {
+                            conn.Open();
+                            cmd.ExecuteNonQuery();
+
+                            //刷新頁面
+                            Response.Redirect("home.aspx");
+                        }
+                        catch (Exception ex)
+                        {
+                         
+                        }
+                    }
+                }
+            }
+        }
 
         // 選擇月份 RadioButton 事件
         protected void RBLChooseMonth_SelectedIndexChanged(object sender, EventArgs eq)
