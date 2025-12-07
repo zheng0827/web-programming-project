@@ -299,7 +299,7 @@ namespace web_programming_project
             chooseCategory.DataBind();
 
         }
-
+        
         protected void BindSummaryData()
         {
             int year = getCurrentYearMonth()[0];
