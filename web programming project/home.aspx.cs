@@ -224,7 +224,7 @@ namespace web_programming_project
 
             return SqlDataSource1;
         }
-
+        
         // 取得某年某月的所有明細
         protected SqlDataSource getDetail(int Year, int Month)
         {
