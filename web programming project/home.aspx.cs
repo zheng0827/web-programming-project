@@ -28,7 +28,7 @@ namespace web_programming_project
         private List<string> categoryListI = new List<string> {
             "薪水","獎金","禮金","投資","其他"
         };
-
+        
         /* ========= 透過隱藏項 currentYearMonth，取得/設置目前選擇的年份與月份 ========= */
 
         // 回傳格式: List<int> { year, month }
@@ -263,7 +263,7 @@ namespace web_programming_project
 
             return SqlDataSource1;
         }
-
+        
         // 取得某年某月的所有明細
         protected SqlDataSource getDetail(int Year, int Month)
         {
@@ -340,7 +340,7 @@ namespace web_programming_project
             chooseCategory.DataBind();
 
         }
-
+        
         protected void BindSummaryData()
         {
             int year = getCurrentYearMonth()[0];
@@ -348,7 +348,7 @@ namespace web_programming_project
 
             SqlDataSource detailData = getDetail(year, month);
             DataView detailDataView = (DataView)detailData.Select(DataSourceSelectArguments.Empty);
-
+            
             int totalExpense = 0;
             int totalIncome = 0;
 
@@ -356,7 +356,7 @@ namespace web_programming_project
             {
                 string type = rowView["type"].ToString();
                 int amount = Convert.ToInt32(rowView["amount"]);
-
+                
                 if (type == "e")
                 {
                     totalExpense += amount;
@@ -366,7 +366,7 @@ namespace web_programming_project
                     totalIncome += amount;
                 }
             }
-
+            
             expense.Text = "-$" + totalExpense.ToString();
             income.Text = "+$" + totalIncome.ToString();
             total.Text = "$" + (totalIncome - totalExpense).ToString();
