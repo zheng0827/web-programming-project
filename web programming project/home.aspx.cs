@@ -28,7 +28,7 @@ namespace web_programming_project
         private List<string> categoryListI = new List<string> {
             "薪水","獎金","禮金","投資","其他"
         };
-
+        
         /* ========= 透過隱藏項 currentYearMonth，取得/設置目前選擇的年份與月份 ========= */
 
         // 回傳格式: List<int> { year, month }
@@ -120,7 +120,48 @@ namespace web_programming_project
             date0.Text = "";
             amount0.Text = "";
             description0.Text = "";
+            Response.Redirect("home.aspx"); // 重新整理頁面
+        }
 
+        protected SqlConnection getConn()
+        {
+            string connectionString = "Data Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename=|DataDirectory|\\Database1.mdf;Integrated Security=True";
+
+            return new SqlConnection(connectionString);
+        }
+
+        protected void delete_Click(object sender, EventArgs e)
+        {
+            Button btn = (Button)sender;
+
+            string recordId = btn.CommandArgument;
+
+            if (!string.IsNullOrEmpty(recordId))
+            { 
+                string deleteQuery = "DELETE FROM [Details] WHERE ID = @ID";
+
+                using (SqlConnection conn = getConn())
+                {
+                    using (SqlCommand cmd = new SqlCommand(deleteQuery, conn))
+                    {
+                        //傳遞字串 ID
+                        cmd.Parameters.AddWithValue("@ID", recordId);
+
+                        try
+                        {
+                            conn.Open();
+                            cmd.ExecuteNonQuery();
+
+                            //刷新頁面
+                            Response.Redirect("home.aspx");
+                        }
+                        catch (Exception ex)
+                        {
+                         
+                        }
+                    }
+                }
+            }
         }
 
         // 選擇月份 RadioButton 事件
@@ -222,7 +263,7 @@ namespace web_programming_project
 
             return SqlDataSource1;
         }
-
+        
         // 取得某年某月的所有明細
         protected SqlDataSource getDetail(int Year, int Month)
         {
@@ -299,7 +340,7 @@ namespace web_programming_project
             chooseCategory.DataBind();
 
         }
-
+        
         protected void BindSummaryData()
         {
             int year = getCurrentYearMonth()[0];
@@ -307,7 +348,7 @@ namespace web_programming_project
 
             SqlDataSource detailData = getDetail(year, month);
             DataView detailDataView = (DataView)detailData.Select(DataSourceSelectArguments.Empty);
-
+            
             int totalExpense = 0;
             int totalIncome = 0;
 
@@ -315,7 +356,7 @@ namespace web_programming_project
             {
                 string type = rowView["type"].ToString();
                 int amount = Convert.ToInt32(rowView["amount"]);
-
+                
                 if (type == "e")
                 {
                     totalExpense += amount;
@@ -325,7 +366,7 @@ namespace web_programming_project
                     totalIncome += amount;
                 }
             }
-
+            
             expense.Text = "-$" + totalExpense.ToString();
             income.Text = "+$" + totalIncome.ToString();
             total.Text = "$" + (totalIncome - totalExpense).ToString();
