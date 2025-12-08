@@ -120,7 +120,8 @@ namespace web_programming_project
             date0.Text = "";
             amount0.Text = "";
             description0.Text = "";
-            Response.Redirect("home.aspx"); // 重新整理頁面
+            // 重新整理頁面(重要!)
+            Response.Redirect("home.aspx"); 
         }
 
         protected SqlConnection getConn()
@@ -130,6 +131,7 @@ namespace web_programming_project
             return new SqlConnection(connectionString);
         }
 
+        // 刪除按鈕事件
         protected void delete_Click(object sender, EventArgs e)
         {
             Button btn = (Button)sender;
@@ -137,9 +139,19 @@ namespace web_programming_project
             string recordId = btn.CommandArgument;
 
             if (!string.IsNullOrEmpty(recordId))
-            { 
-                string deleteQuery = "DELETE FROM [Details] WHERE ID = @ID";
+            {
+                string sql = @"DELETE FROM [Details] WHERE [ID] = @ID";
 
+                SqlDataSource1.DeleteCommand = sql;
+                SqlDataSource1.DeleteParameters.Clear();
+                SqlDataSource1.DeleteParameters.Add("ID", recordId);
+                SqlDataSource1.Delete();
+                // 刷新頁面
+                Response.Redirect("home.aspx");
+
+                /*
+                 * 這邊做了一些小修改，改為使用在設計頁面添加的 SqlDataSource 物件 SqlDataSource1。看起來更簡潔。
+                string deleteQuery = "DELETE FROM [Details] WHERE ID = @ID";
                 using (SqlConnection conn = getConn())
                 {
                     using (SqlCommand cmd = new SqlCommand(deleteQuery, conn))
@@ -160,7 +172,7 @@ namespace web_programming_project
                          
                         }
                     }
-                }
+                }*/
             }
         }
 
