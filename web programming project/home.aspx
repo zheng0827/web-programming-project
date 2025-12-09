@@ -45,6 +45,9 @@
                         <asp:ListItem Value="12" Text="12"></asp:ListItem>
                     </asp:RadioButtonList>
                 </div>
+                <br />
+                <br />
+                <asp:Button ID="chart" runat="server" Text="Button" />
             </div>
             <!-- 中間 -->
             <div class="main">

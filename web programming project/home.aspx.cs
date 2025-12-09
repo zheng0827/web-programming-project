@@ -239,7 +239,7 @@ namespace web_programming_project
                         colorStr = "#198754";  // 綠
                         break;
                     default:
-                        colorStr = "#ffffff";  // 黑
+                        colorStr = "#ffffff";  // 白
                         break;
                 }
 

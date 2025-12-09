@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Web;
 using System.Web.UI;
@@ -102,23 +103,67 @@ namespace web_programming_project
         }
 
         // 取得某年某月某日的所有明細
-        protected SqlDataSource getDetailByDay(int Year, int Month, int Day)
+        protected SqlDataSource getDetailByYear(int Year)
         {
-            string sql = @"SELECT * FROM [Details] WHERE [Year] = @Year AND [Month] = @Month AND [Day] = @Day ORDER BY [ID] DESC";
+            string sql = @"SELECT * FROM [Details] WHERE [Year] = @Year ORDER BY [ID] DESC";
 
             SqlDataSource1.SelectCommand = sql;
 
             SqlDataSource1.SelectParameters.Clear();
             SqlDataSource1.SelectParameters.Add("Year", System.Data.DbType.Int32, Year.ToString());
-            SqlDataSource1.SelectParameters.Add("Month", System.Data.DbType.Int32, Month.ToString());
-            SqlDataSource1.SelectParameters.Add("Day", System.Data.DbType.Int32, Day.ToString());
 
             return SqlDataSource1;
         }
 
+        protected List<List<int>> handleYearLine(int Year)
+        {
+            // 定義List
+            List<int> month = new List<int> {1,2,3,4,5,6,7,8,9,10,11,12};
+            List<int> balance = new List<int> { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+            // 獲取年度資料
+            SqlDataSource yearDetail = getDetailByYear(Year);
+            // 將 SqlDataSource 轉換成 DataView
+            DataView dataView = (DataView)yearDetail.Select(DataSourceSelectArguments.Empty);
+
+            foreach (DataRowView rowView in dataView)
+            {
+                // 月份 - 1 = 在list中的索引值
+                int inx = Convert.ToInt32(rowView["month"]) - 1;
+                int amount = Convert.ToInt32(rowView["amount"]);
+                // 根據類別加或減取得結餘
+                switch (rowView["type"].ToString())
+                {
+                    case "e":
+                        balance[inx] -= amount;
+                        break;
+                    case "i":
+                        balance[inx] += amount;
+                        break;
+                    default:
+                        balance[inx] += 0;
+                        break;
+                }
+
+            }
+            return new List<List<int>> {month,balance};
+        }
+
         protected void Page_Load(object sender, EventArgs e)
         {
+            if (!IsPostBack)
+            {
+                int currentYear = DateTime.Now.Year; // 取得目前年份
+                int currentMonth = DateTime.Now.Month; // 取得目前月份
+                setCurrentYearMonth(currentYear, currentMonth); // 設定隱藏欄位的值
 
+                monthTitle.Text = currentYear + " 年 " + currentMonth + " 月 記帳本"; // 設定標題
+                yearLabel.Text = currentYear.ToString(); // 設定年份標籤
+                RBLChooseMonth.SelectedIndex = currentMonth - 1; // 設定選擇的月份
+
+                List<List<int>> qwq = handleYearLine(currentYear);
+                // qwq[0] = month List => {1,2,3,...,12}
+                // qwq[1] = balance List => {...}
+            }
         }
     }
 }
