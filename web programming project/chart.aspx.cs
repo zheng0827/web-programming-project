@@ -5,9 +5,12 @@ using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using System.Web.Services;
+
 
 namespace web_programming_project
-{
+{   
+
     public partial class chart : System.Web.UI.Page
     {
         /* ========= 透過隱藏項 currentYearMonth，取得/設置目前選擇的年份與月份 ========= */
@@ -146,6 +149,24 @@ namespace web_programming_project
 
             }
             return new List<List<int>> {month,balance};
+        }
+
+        [WebMethod]
+        public static object GetYearLineChartData()
+        {   
+            // 建立 chart 實例以呼叫非靜態方法
+            chart page = (chart)HttpContext.Current.Handler;
+            int currentYear = page.getCurrentYearMonth()[0];
+            List<int> months = page.handleYearLine(currentYear)[0];
+            List<int> data = page.handleYearLine(currentYear)[1];
+            // 從資料庫或其他來源獲取數據
+            var dataForChart = new
+            {
+                labels = months.ToArray(),
+                data = data.ToArray()
+            };
+
+            return dataForChart; // ASP.NET 會自動將它序列化為 JSON
         }
 
         protected void Page_Load(object sender, EventArgs e)
