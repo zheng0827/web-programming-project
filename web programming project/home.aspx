@@ -47,7 +47,7 @@
                 </div>
                 <br />
                 <br />
-                <asp:Button ID="chart" runat="server" Text="Button" OnClick="chart_Click" />
+                <asp:Button ID="chart" runat="server" Text="圖表" CausesValidation="False" OnClick="chart_Click" />
             </div>
             <!-- 中間 -->
             <div class="main">

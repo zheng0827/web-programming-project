@@ -50,6 +50,8 @@
             </div>
             <!-- 主要頁面 -->
             <div class="main">
+                <asp:Button ID="Button1" runat="server" OnClick="Button1_Click" Text="返回" Width="56px" />
+                <br />
                 <asp:Label ID="Label1" runat="server" Text="年度總攬"></asp:Label>
                 <br />           
                 <asp:Image ID="year_line_chart" runat="server" />

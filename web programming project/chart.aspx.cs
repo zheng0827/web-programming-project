@@ -136,13 +136,13 @@ namespace web_programming_project
         "娛樂", "交通", "社交", "數位服務", "薪水",
         "獎金", "禮金", "投資", "其他"
     };
-        private (List<string> labels, List<int> data) GetCategoryTotalsMonthly(int Month)
+        private (List<string> labels, List<int> data) GetCategoryTotalsMonthly(int Year, int Month)
         {
 
             Dictionary<string, int> categoryTotals = AllCategories.ToDictionary(key => key, value => 0);
 
 
-            SqlDataSource monthDetail = getDetailByMonth(Month);
+            SqlDataSource monthDetail = getDetailByMonthAndYear(Year,Month);
 
            
             DataView dataView = (DataView)monthDetail.Select(DataSourceSelectArguments.Empty);
@@ -302,11 +302,43 @@ namespace web_programming_project
             return new List<List<int>> { newLabels, newBalances };
         }
 
- 
-        
+        protected List<List<int>> handledailyLine(int Year, int Month)
+        {
+            var date = Enumerable.Range(1, 31).ToList();
+            var balance = Enumerable.Repeat(0, 31).ToList();
+
+            SqlDataSource monthDetail = getDetailByMonthAndYear(Year, Month);
+            DataView dataView = (DataView)monthDetail.Select(DataSourceSelectArguments.Empty);
+
+            foreach (DataRowView rowView in dataView)
+            {
+                int day = Convert.ToInt32(rowView["day"]);
+                int inx = day - 1;
+                if (inx < 0 || inx >= balance.Count) continue; // 驗證 day 範圍或記錄錯誤
+                int amount = Convert.ToInt32(rowView["amount"]);
+                switch (rowView["type"].ToString())
+                {
+                    case "e":
+                        balance[inx] += amount;
+                        break;
+                    case "i":
+                    
+                        break;
+                }
+            }
+
+            var filtered = date.Zip(balance, (d, b) => new { d, b })
+                               .Where(x => x.b != 0)
+                               .ToList();
+
+            var newLabels = filtered.Select(x => x.d).ToList();
+            var newBalances = filtered.Select(x => x.b).ToList();
+            return new List<List<int>> { newLabels, newBalances };
+        }
 
 
-      
+
+
         [WebMethod]
         public static object GetYearLineChartData()
         {   
@@ -369,7 +401,7 @@ namespace web_programming_project
             List<int> balance = qwq[1];
 
             var result = GetCategoryTotalsYearly(currentYear);
-            var resultdaily = GetCategoryTotalsMonthly(currentMonth);
+            var resultdaily = GetCategoryTotalsMonthly(currentYear, currentMonth);
 
 
             string labelsJson = JsonSerializer.Serialize(month.Select(x => x.ToString()));
@@ -378,8 +410,14 @@ namespace web_programming_project
             string categoryLabelsJson = JsonSerializer.Serialize(result.labels);
             string categoryDataJson = JsonSerializer.Serialize(result.data);
 
-            string dailyLabelsJson = JsonSerializer.Serialize(resultdaily.labels);
-            string dailyDataJson = JsonSerializer.Serialize(resultdaily.data);
+           string dailyLabelsJson = JsonSerializer.Serialize(resultdaily.labels);
+           string dailyDataJson = JsonSerializer.Serialize(resultdaily.data);
+
+            List<List<int>> qwq2 = handledailyLine(currentYear, currentMonth);
+            List<int> date2 = qwq2[0];
+            List<int> balance2 = qwq2[1];
+            string dailylabelsJson = JsonSerializer.Serialize(date2.Select(x => x.ToString()));
+            string dailydataJson = JsonSerializer.Serialize(balance2);
 
             Chart qc3 = new Chart();
             qc3.Width = 500;
@@ -390,12 +428,13 @@ namespace web_programming_project
             qc3.Config = $@"{{
                     type: 'line',
                     data: {{
-                        labels: {datelabelsJson},
+                        labels: {dailylabelsJson},
                         datasets: [{{
                             label: '支出',
-                            data: {datedataJson},
+                            data: {dailydataJson},
                             fill: false,
-                            tension: 0.4
+                            tension: 0.4,
+                            beginAtZero: true
                         }}]
                     }}
                 }}";
@@ -412,10 +451,10 @@ namespace web_programming_project
             qc2.Config = $@"{{
                     type: 'bar',
                     data: {{
-                        labels: {categoryLabelsJson},
+                        labels: {dailyLabelsJson},
                         datasets: [{{
                             label: '支出',
-                            data: {categoryDataJson},
+                            data: {dailyDataJson},
                             fill: false,
                         }}]
                     }}
@@ -464,8 +503,124 @@ namespace web_programming_project
                 yearLabel.Text = currentYear.ToString(); // 設定年份標籤
                 RBLChooseMonth.SelectedIndex = currentMonth - 1; // 設定選擇的月份
 
-               
+                List<List<int>> qwq1 = handleMonthLine(currentYear, currentMonth);
+                List<int> date = qwq1[0];
+                List<int> balance1 = qwq1[1];
+                string datelabelsJson = JsonSerializer.Serialize(date.Select(x => x.ToString()));
+                string datedataJson = JsonSerializer.Serialize(balance1);
+                // 2. 注意這裡多了 '$' 符號，變成 $@"..."
+                Chart qc1 = new Chart();
+                qc1.Width = 500;
+                qc1.Height = 300;
+                qc1.Version = "2.9.4";
+                qc1.Config = $@"{{
+                    type: 'bar',
+                    data: {{
+                        labels: {datelabelsJson},
+                        datasets: [{{
+                            label: '本月結餘',
+                            data: {datedataJson},
+                            fill: false,
+                        }}]
+                    }}
+                }}";
+                qc1.BackgroundColor = "#1e293b";
+
+                balance_chart.ImageUrl = qc1.GetUrl();
+                List<List<int>> qwq = handleYearLine(currentYear);
+                List<int> month = qwq[0];
+                List<int> balance = qwq[1];
+
+                var result = GetCategoryTotalsYearly(currentYear);
+                var resultdaily = GetCategoryTotalsMonthly(currentYear, currentMonth);
+
+
+                string labelsJson = JsonSerializer.Serialize(month.Select(x => x.ToString()));
+                string dataJson = JsonSerializer.Serialize(balance);
+
+                string categoryLabelsJson = JsonSerializer.Serialize(result.labels);
+                string categoryDataJson = JsonSerializer.Serialize(result.data);
+
+                List<List<int>> qwq2 = handledailyLine(currentYear, currentMonth);
+                List<int> date2 = qwq2[0];
+                List<int> balance2 = qwq2[1];
+                string dailylabelsJson = JsonSerializer.Serialize(date2.Select(x => x.ToString()));
+                string dailydataJson = JsonSerializer.Serialize(balance2);
+                string dailyLabelsJson = JsonSerializer.Serialize(resultdaily.labels);
+                string dailyDataJson = JsonSerializer.Serialize(resultdaily.data);
+
+                Chart qc3 = new Chart();
+                qc3.Width = 500;
+                qc3.Height = 300;
+                qc3.Version = "2.9.4";
+
+                // 2. 注意這裡多了 '$' 符號，變成 $@"..."
+                qc3.Config = $@"{{
+                    type: 'line',
+                    data: {{
+                        labels: {dailylabelsJson},
+                        datasets: [{{
+                            label: '支出',
+                            data: {dailydataJson},
+                            fill: false,
+                            tension: 0.4,
+                            beginAtZero: true
+                        }}]
+                    }}
+                }}";
+                qc3.BackgroundColor = "#1e293b";
+
+                daliy_expense_chart.ImageUrl = qc3.GetUrl();
+
+                Chart qc2 = new Chart();
+                qc2.Width = 500;
+                qc2.Height = 300;
+                qc2.Version = "2.9.4";
+
+                // 2. 注意這裡多了 '$' 符號，變成 $@"..."
+                qc2.Config = $@"{{
+                    type: 'bar',
+                    data: {{
+                        labels: {dailyLabelsJson},
+                        datasets: [{{
+                            label: '支出',
+                            data: {dailyDataJson},
+                            fill: false,
+                        }}]
+                    }}
+                }}";
+                qc2.BackgroundColor = "#1e293b";
+
+                expense_chart.ImageUrl = qc2.GetUrl();
+
+
+
+
+
+                Chart qc = new Chart();
+                qc.Width = 500;
+                qc.Height = 300;
+                qc.Version = "2.9.4";
+
+                // 2. 注意這裡多了 '$' 符號，變成 $@"..."
+                qc.Config = $@"{{
+                    type: 'line',
+                    data: {{
+                        labels: {labelsJson},
+                        datasets: [{{
+                            label: '月結餘',
+                            data: {dataJson}
+                        }}]
+                    }}
+                }}";
+                qc.BackgroundColor = "#1e293b";
+                year_line_chart.ImageUrl = qc.GetUrl();
             }
         }
+
+        protected void Button1_Click(object sender, EventArgs e)
+        {
+            Response.Redirect("home.aspx");
+        }
     }
-}
+    }
