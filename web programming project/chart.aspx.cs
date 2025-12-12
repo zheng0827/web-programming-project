@@ -61,20 +61,7 @@ namespace web_programming_project
 
 
         // 選擇月份 RadioButton 事件
-        protected void RBLChooseMonth_SelectedIndexChanged(object sender, EventArgs eq)
-        {
-            int currentYear = getCurrentYearMonth()[0];
-            int currentMonth = getCurrentYearMonth()[1];
 
-            if (RBLChooseMonth.SelectedIndex == -1) return; // 沒有選擇月份
-            if (int.Parse(yearLabel.Text) == currentYear && RBLChooseMonth.SelectedIndex + 1 == currentMonth) return; // 選擇當前年月
-
-            currentYear = int.Parse(yearLabel.Text); // 設置目前選擇的年份
-            currentMonth = RBLChooseMonth.SelectedIndex + 1; // 設置目前選擇的月份
-            setCurrentYearMonth(currentYear, currentMonth); // 設定隱藏欄位的值
-
-            monthTitle.Text = currentYear + " 年 " + currentMonth + " 月 記帳本"; // 設定標題
-        }
 
         /* ================================== 獲取資料 ================================== */
 
@@ -129,6 +116,63 @@ namespace web_programming_project
 
             return SqlDataSource1;
         }
+
+        private static List<string> AllCategories = new List<string>
+    {
+        "早餐", "午餐", "晚餐", "購物", "醫療", "點心",
+        "娛樂", "交通", "社交", "數位服務", "薪水",
+        "獎金", "禮金", "投資", "其他"
+    };
+        private (List<string> labels, List<int> data) GetCategoryTotals(int Month)
+        {
+
+            Dictionary<string, int> categoryTotals = AllCategories.ToDictionary(key => key, value => 0);
+
+
+            SqlDataSource monthDetail = getDetailByMonth(Month);
+
+           
+            DataView dataView = (DataView)monthDetail.Select(DataSourceSelectArguments.Empty);
+
+       
+            foreach (DataRowView rowView in dataView)
+            {
+                
+                string category = rowView["Category"].ToString();
+                string type = rowView["Type"].ToString().ToLower(); 
+
+                
+                int amount = Convert.ToInt32(rowView["Amount"]);
+
+               
+                if (categoryTotals.ContainsKey(category))
+                {
+                    if (type == "e")
+                    {
+                        categoryTotals[category] -= amount;
+                    }
+                    else if (type == "i")
+                    {
+                        categoryTotals[category] += amount;
+                    }
+                }
+                // 註：如果 Category 不在 AllCategories 清單中，則忽略該筆資料
+            }
+
+            // 4. 篩選、排序和結構化數據
+            var filteredData = categoryTotals
+                .Where(kvp => kvp.Value != 0) // 剔除總結餘為 0 的類別
+                .OrderByDescending(kvp => Math.Abs(kvp.Value)) // 按照絕對值降序排列 
+                .ToList();
+
+          
+            return (
+                labels: filteredData.Select(kvp => kvp.Key).ToList(), // 類別名稱 (e.g., "薪水", "午餐")
+                data: filteredData.Select(kvp => kvp.Value).ToList() // 對應的總結餘 (e.g., 5000, -300)
+            );
+        }
+    
+
 
         protected List<List<int>> handleYearLine(int Year)
         {
@@ -197,6 +241,12 @@ namespace web_programming_project
             var newBalances = filtered.Select(x => x.b).ToList();
             return new List<List<int>> { newLabels, newBalances };
         }
+
+ 
+        
+
+
+      
         [WebMethod]
         public static object GetYearLineChartData()
         {   
@@ -215,38 +265,32 @@ namespace web_programming_project
             return dataForChart; // ASP.NET 會自動將它序列化為 JSON
         }
 
-        protected void Page_Load(object sender, EventArgs e)
+        protected void RBLChooseMonth_SelectedIndexChanged(object sender, EventArgs eq)
         {
-            if (!IsPostBack)
-            {
-                int currentYear = DateTime.Now.Year; // 取得目前年份
-                int currentMonth = DateTime.Now.Month; // 取得目前月份
-                setCurrentYearMonth(currentYear, currentMonth); // 設定隱藏欄位的值
+            int currentYear = getCurrentYearMonth()[0];
+            int currentMonth = getCurrentYearMonth()[1];
 
-                monthTitle.Text = currentYear + " 年 " + currentMonth + " 月 記帳本"; // 設定標題
-                yearLabel.Text = currentYear.ToString(); // 設定年份標籤
-                RBLChooseMonth.SelectedIndex = currentMonth - 1; // 設定選擇的月份
+            if (RBLChooseMonth.SelectedIndex == -1) return; // 沒有選擇月份
+            if (int.Parse(yearLabel.Text) == currentYear && RBLChooseMonth.SelectedIndex + 1 == currentMonth) return; // 選擇當前年月
 
-                List<List<int>> qwq = handleYearLine(currentYear);
-                List<int> month = qwq[0];
-                List<int> balance = qwq[1];
-                List<List<int>> qwq1 = handleMonthLine(currentMonth);
-                List<int> date = qwq1[0];
-                List<int> balance1 = qwq1[1];
+            currentYear = int.Parse(yearLabel.Text); // 設置目前選擇的年份
+            currentMonth = RBLChooseMonth.SelectedIndex + 1; // 設置目前選擇的月份
+            setCurrentYearMonth(currentYear, currentMonth); // 設定隱藏欄位的值
 
-                string labelsJson = JsonSerializer.Serialize(month.Select(x => x.ToString()));
-                string dataJson = JsonSerializer.Serialize(balance);
-                string datelabelsJson = JsonSerializer.Serialize(date.Select(x => x.ToString()));
-                string datedataJson = JsonSerializer.Serialize(balance1);
+            monthTitle.Text = currentYear + " 年 " + currentMonth + " 月 記帳本"; // 設定標題
 
 
-                Chart qc1 = new Chart();
-                qc1.Width = 500;
-                qc1.Height = 300;
-                qc1.Version = "2.9.4";
-
-                // 2. 注意這裡多了 '$' 符號，變成 $@"..."
-                qc1.Config = $@"{{
+            List<List<int>> qwq1 = handleMonthLine(currentMonth);
+            List<int> date = qwq1[0];
+            List<int> balance1 = qwq1[1];
+            string datelabelsJson = JsonSerializer.Serialize(date.Select(x => x.ToString()));
+            string datedataJson = JsonSerializer.Serialize(balance1);
+            // 2. 注意這裡多了 '$' 符號，變成 $@"..."
+            Chart qc1 = new Chart();
+            qc1.Width = 500;
+            qc1.Height = 300;
+            qc1.Version = "2.9.4";
+            qc1.Config = $@"{{
                     type: 'line',
                     data: {{
                         labels: {datelabelsJson},
@@ -257,17 +301,55 @@ namespace web_programming_project
                         }}]
                     }}
                 }}";
-                qc1.BackgroundColor = "#1e293b";
-                
-                balance_chart.ImageUrl = qc1.GetUrl();
+            qc1.BackgroundColor = "#1e293b";
 
-                Chart qc = new Chart();
-                qc.Width = 500;
-                qc.Height = 300;
-                qc.Version = "2.9.4";
+            balance_chart.ImageUrl = qc1.GetUrl();
+            List<List<int>> qwq = handleYearLine(currentYear);
+            List<int> month = qwq[0];
+            List<int> balance = qwq[1];
 
-                // 2. 注意這裡多了 '$' 符號，變成 $@"..."
-                qc.Config = $@"{{
+            var result = GetCategoryTotals(currentMonth);
+
+
+
+            string labelsJson = JsonSerializer.Serialize(month.Select(x => x.ToString()));
+            string dataJson = JsonSerializer.Serialize(balance);
+
+            string categoryLabelsJson = JsonSerializer.Serialize(result.labels);
+            string categoryDataJson = JsonSerializer.Serialize(result.data);
+
+            Chart qc2 = new Chart();
+            qc2.Width = 500;
+            qc2.Height = 300;
+            qc2.Version = "2.9.4";
+
+            // 2. 注意這裡多了 '$' 符號，變成 $@"..."
+            qc2.Config = $@"{{
+                    type: 'bar',
+                    data: {{
+                        labels: {categoryLabelsJson},
+                        datasets: [{{
+                            label: '支出',
+                            data: {categoryDataJson},
+                            fill: false,
+                        }}]
+                    }}
+                }}";
+            qc2.BackgroundColor = "#1e293b";
+
+            expense_chart.ImageUrl = qc2.GetUrl();
+
+
+
+
+
+            Chart qc = new Chart();
+            qc.Width = 500;
+            qc.Height = 300;
+            qc.Version = "2.9.4";
+
+            // 2. 注意這裡多了 '$' 符號，變成 $@"..."
+            qc.Config = $@"{{
                     type: 'line',
                     data: {{
                         labels: {labelsJson},
@@ -277,8 +359,27 @@ namespace web_programming_project
                         }}]
                     }}
                 }}";
-                qc.BackgroundColor = "#1e293b";
-                year_line_chart.ImageUrl = qc.GetUrl();
+            qc.BackgroundColor = "#1e293b";
+            year_line_chart.ImageUrl = qc.GetUrl();
+        }
+
+
+
+        protected void Page_Load(object sender, EventArgs e)
+        {
+
+            if (!IsPostBack)
+            {
+                
+                int currentYear = DateTime.Now.Year; // 取得目前年份
+                int currentMonth = DateTime.Now.Month; // 取得目前月份
+                setCurrentYearMonth(currentYear, currentMonth);// 設定隱藏欄位的值
+
+                monthTitle.Text = currentYear + " 年 " + currentMonth + " 月 記帳本"; // 設定標題
+                yearLabel.Text = currentYear.ToString(); // 設定年份標籤
+                RBLChooseMonth.SelectedIndex = currentMonth - 1; // 設定選擇的月份
+
+               
             }
         }
     }

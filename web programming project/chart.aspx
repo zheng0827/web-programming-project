@@ -62,7 +62,7 @@
                     <asp:Image ID="balance_chart" runat="server" />
                     <br />
 
-                    <asp:Label ID="Label3" runat="server" Text="類別支出長條圖"></asp:Label>
+                    <asp:Label ID="Label3" runat="server" Text="類別收支長條圖"></asp:Label>
                     <br />
                     <asp:Image ID="expense_chart" runat="server" />
                     <br />

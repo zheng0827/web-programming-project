@@ -383,5 +383,10 @@ namespace web_programming_project
             income.Text = "+$" + totalIncome.ToString();
             total.Text = "$" + (totalIncome - totalExpense).ToString();
         }
+
+        protected void chart_Click(object sender, EventArgs e)
+        {
+            Response.Redirect("chart.aspx");
+        }
     }
 }
