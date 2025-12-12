@@ -118,6 +118,17 @@ namespace web_programming_project
 
             return SqlDataSource1;
         }
+        protected SqlDataSource getDetailByMonth(int Month)
+        {
+            string sql = @"SELECT * FROM [Details] WHERE [Month] = @Month ORDER BY [ID] DESC";
+
+            SqlDataSource1.SelectCommand = sql;
+
+            SqlDataSource1.SelectParameters.Clear();
+            SqlDataSource1.SelectParameters.Add("Month", System.Data.DbType.Int32, Month.ToString());
+
+            return SqlDataSource1;
+        }
 
         protected List<List<int>> handleYearLine(int Year)
         {
@@ -151,7 +162,41 @@ namespace web_programming_project
             }
             return new List<List<int>> {month,balance};
         }
+       
 
+        protected List<List<int>> handleMonthLine(int Month)
+        {
+            var date = Enumerable.Range(1, 31).ToList();
+            var balance = Enumerable.Repeat(0, 31).ToList();
+
+            SqlDataSource monthDetail = getDetailByMonth(Month);
+            DataView dataView = (DataView)monthDetail.Select(DataSourceSelectArguments.Empty);
+
+            foreach (DataRowView rowView in dataView)
+            {
+                int day = Convert.ToInt32(rowView["day"]);
+                int inx = day - 1;
+                if (inx < 0 || inx >= balance.Count) continue; // 驗證 day 範圍或記錄錯誤
+                int amount = Convert.ToInt32(rowView["amount"]);
+                switch (rowView["type"].ToString())
+                {
+                    case "e":
+                        balance[inx] -= amount;
+                        break;
+                    case "i":
+                        balance[inx] += amount;
+                        break;
+                }
+            }
+
+            var filtered = date.Zip(balance, (d, b) => new { d, b })
+                               .Where(x => x.b != 0)
+                               .ToList();
+
+            var newLabels = filtered.Select(x => x.d).ToList();
+            var newBalances = filtered.Select(x => x.b).ToList();
+            return new List<List<int>> { newLabels, newBalances };
+        }
         [WebMethod]
         public static object GetYearLineChartData()
         {   
@@ -185,9 +230,36 @@ namespace web_programming_project
                 List<List<int>> qwq = handleYearLine(currentYear);
                 List<int> month = qwq[0];
                 List<int> balance = qwq[1];
+                List<List<int>> qwq1 = handleMonthLine(currentMonth);
+                List<int> date = qwq1[0];
+                List<int> balance1 = qwq1[1];
 
                 string labelsJson = JsonSerializer.Serialize(month.Select(x => x.ToString()));
                 string dataJson = JsonSerializer.Serialize(balance);
+                string datelabelsJson = JsonSerializer.Serialize(date.Select(x => x.ToString()));
+                string datedataJson = JsonSerializer.Serialize(balance1);
+
+
+                Chart qc1 = new Chart();
+                qc1.Width = 500;
+                qc1.Height = 300;
+                qc1.Version = "2.9.4";
+
+                // 2. 注意這裡多了 '$' 符號，變成 $@"..."
+                qc1.Config = $@"{{
+                    type: 'line',
+                    data: {{
+                        labels: {datelabelsJson},
+                        datasets: [{{
+                            label: '本月結餘',
+                            data: {datedataJson},
+                            fill: false,
+                        }}]
+                    }}
+                }}";
+                qc1.BackgroundColor = "#1e293b";
+                
+                balance_chart.ImageUrl = qc1.GetUrl();
 
                 Chart qc = new Chart();
                 qc.Width = 500;
