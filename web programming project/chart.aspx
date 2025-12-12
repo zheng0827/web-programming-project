@@ -51,9 +51,7 @@
             <!-- 主要頁面 -->
             <div class="main">
                 <asp:Label ID="Label1" runat="server" Text="年度總攬"></asp:Label>
-                <br />
-                <canvas id="yearline_chart"></canvas>
-                
+                <br />           
                 <asp:Image ID="year_line_chart" runat="server" />
                 <br />
                 <div class="month">
@@ -62,7 +60,7 @@
                     <asp:Image ID="balance_chart" runat="server" />
                     <br />
 
-                    <asp:Label ID="Label3" runat="server" Text="類別收支長條圖"></asp:Label>
+                    <asp:Label ID="Label3" runat="server" Text="類別支出長條圖"></asp:Label>
                     <br />
                     <asp:Image ID="expense_chart" runat="server" />
                     <br />

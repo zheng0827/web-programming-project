@@ -117,13 +117,26 @@ namespace web_programming_project
             return SqlDataSource1;
         }
 
+        protected SqlDataSource getDetailByMonthAndYear(int Year, int Month)
+        {
+         
+            string sql = @"SELECT * FROM [Details] WHERE [Year] = @Year AND [Month] = @Month ORDER BY [ID] DESC";
+
+            SqlDataSource1.SelectCommand = sql;
+            SqlDataSource1.SelectParameters.Clear();
+    
+            SqlDataSource1.SelectParameters.Add("Year", System.Data.DbType.Int32, Year.ToString());
+            SqlDataSource1.SelectParameters.Add("Month", System.Data.DbType.Int32, Month.ToString());
+
+            return SqlDataSource1;
+        }
         private static List<string> AllCategories = new List<string>
     {
         "早餐", "午餐", "晚餐", "購物", "醫療", "點心",
         "娛樂", "交通", "社交", "數位服務", "薪水",
         "獎金", "禮金", "投資", "其他"
     };
-        private (List<string> labels, List<int> data) GetCategoryTotals(int Month)
+        private (List<string> labels, List<int> data) GetCategoryTotalsMonthly(int Month)
         {
 
             Dictionary<string, int> categoryTotals = AllCategories.ToDictionary(key => key, value => 0);
@@ -149,11 +162,11 @@ namespace web_programming_project
                 {
                     if (type == "e")
                     {
-                        categoryTotals[category] -= amount;
+                        categoryTotals[category] += amount;
                     }
                     else if (type == "i")
                     {
-                        categoryTotals[category] += amount;
+                      
                     }
                 }
                 // 註：如果 Category 不在 AllCategories 清單中，則忽略該筆資料
@@ -171,7 +184,54 @@ namespace web_programming_project
                 data: filteredData.Select(kvp => kvp.Value).ToList() // 對應的總結餘 (e.g., 5000, -300)
             );
         }
-    
+        private (List<string> labels, List<int> data) GetCategoryTotalsYearly(int Year)
+        {
+
+            Dictionary<string, int> categoryTotals = AllCategories.ToDictionary(key => key, value => 0);
+
+
+            SqlDataSource yearDetail = getDetailByYear(Year);
+
+
+            DataView dataView = (DataView)yearDetail.Select(DataSourceSelectArguments.Empty);
+
+
+            foreach (DataRowView rowView in dataView)
+            {
+
+                string category = rowView["Category"].ToString();
+                string type = rowView["Type"].ToString().ToLower();
+
+
+                int amount = Convert.ToInt32(rowView["Amount"]);
+
+
+                if (categoryTotals.ContainsKey(category))
+                {
+                    if (type == "e")
+                    {
+                        categoryTotals[category] += amount;
+                    }
+                    else if (type == "i")
+                    {
+
+                    }
+                }
+                // 註：如果 Category 不在 AllCategories 清單中，則忽略該筆資料
+            }
+
+            // 4. 篩選、排序和結構化數據
+            var filteredData = categoryTotals
+                .Where(kvp => kvp.Value != 0) // 剔除總結餘為 0 的類別
+                .OrderByDescending(kvp => Math.Abs(kvp.Value)) // 按照絕對值降序排列 
+                .ToList();
+
+
+            return (
+                labels: filteredData.Select(kvp => kvp.Key).ToList(), // 類別名稱 (e.g., "薪水", "午餐")
+                data: filteredData.Select(kvp => kvp.Value).ToList() // 對應的總結餘 (e.g., 5000, -300)
+            );
+        }
 
 
         protected List<List<int>> handleYearLine(int Year)
@@ -208,12 +268,12 @@ namespace web_programming_project
         }
        
 
-        protected List<List<int>> handleMonthLine(int Month)
+        protected List<List<int>> handleMonthLine(int Year,int Month)
         {
             var date = Enumerable.Range(1, 31).ToList();
             var balance = Enumerable.Repeat(0, 31).ToList();
 
-            SqlDataSource monthDetail = getDetailByMonth(Month);
+            SqlDataSource monthDetail = getDetailByMonthAndYear(Year,Month);
             DataView dataView = (DataView)monthDetail.Select(DataSourceSelectArguments.Empty);
 
             foreach (DataRowView rowView in dataView)
@@ -280,7 +340,7 @@ namespace web_programming_project
             monthTitle.Text = currentYear + " 年 " + currentMonth + " 月 記帳本"; // 設定標題
 
 
-            List<List<int>> qwq1 = handleMonthLine(currentMonth);
+            List<List<int>> qwq1 = handleMonthLine(currentYear,currentMonth);
             List<int> date = qwq1[0];
             List<int> balance1 = qwq1[1];
             string datelabelsJson = JsonSerializer.Serialize(date.Select(x => x.ToString()));
@@ -291,7 +351,7 @@ namespace web_programming_project
             qc1.Height = 300;
             qc1.Version = "2.9.4";
             qc1.Config = $@"{{
-                    type: 'line',
+                    type: 'bar',
                     data: {{
                         labels: {datelabelsJson},
                         datasets: [{{
@@ -308,8 +368,8 @@ namespace web_programming_project
             List<int> month = qwq[0];
             List<int> balance = qwq[1];
 
-            var result = GetCategoryTotals(currentMonth);
-
+            var result = GetCategoryTotalsYearly(currentYear);
+            var resultdaily = GetCategoryTotalsMonthly(currentMonth);
 
 
             string labelsJson = JsonSerializer.Serialize(month.Select(x => x.ToString()));
@@ -317,6 +377,31 @@ namespace web_programming_project
 
             string categoryLabelsJson = JsonSerializer.Serialize(result.labels);
             string categoryDataJson = JsonSerializer.Serialize(result.data);
+
+            string dailyLabelsJson = JsonSerializer.Serialize(resultdaily.labels);
+            string dailyDataJson = JsonSerializer.Serialize(resultdaily.data);
+
+            Chart qc3 = new Chart();
+            qc3.Width = 500;
+            qc3.Height = 300;
+            qc3.Version = "2.9.4";
+
+            // 2. 注意這裡多了 '$' 符號，變成 $@"..."
+            qc3.Config = $@"{{
+                    type: 'line',
+                    data: {{
+                        labels: {datelabelsJson},
+                        datasets: [{{
+                            label: '支出',
+                            data: {datedataJson},
+                            fill: false,
+                            tension: 0.4
+                        }}]
+                    }}
+                }}";
+            qc3.BackgroundColor = "#1e293b";
+
+            daliy_expense_chart.ImageUrl = qc3.GetUrl();
 
             Chart qc2 = new Chart();
             qc2.Width = 500;
