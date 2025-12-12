@@ -83,7 +83,7 @@
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
     <script>
-        $(document).ready(function () {
+        document.addEventListener('DOMContentLoaded', function () {
             // 替換成您的 Web Form 頁面名稱 (例如: Default.aspx)
             const pageName = 'chart.aspx';
 
@@ -95,16 +95,15 @@
                 dataType: "json",
                 success: function (response) {
                     const dataObject = response.d; // Web Method 返回的數據在 response.d 中
-
                     const ctx = document.getElementById('yearline_chart');
                     if (ctx) {
-                        new Chart(ctx, {
+                        const yearline_chart1 = new Chart(ctx, {
                             type: 'line', // 示例：折線圖
                             data: {
-                                labels: dataObject.labels,
+                                labels: dataObject.Labels,
                                 datasets: [{
                                     label: '月分',
-                                    data: dataObject.data,
+                                    data: dataObject.Data,
                                     backgroundColor: 'rgba(255, 162, 235, 0.5)',
                                     borderColor: 'rgba(54, 162, 235, 1)',
                                     borderWidth: 2,

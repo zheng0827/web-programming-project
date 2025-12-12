@@ -163,8 +163,8 @@ namespace web_programming_project
             // 從資料庫或其他來源獲取數據
             var dataForChart = new
             {
-                labels = months.ToArray(),
-                data = data.ToArray()
+                Labels = months,
+                Data = data
             };
 
             return dataForChart; // ASP.NET 會自動將它序列化為 JSON
