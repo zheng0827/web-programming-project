@@ -6,7 +6,8 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using System.Web.Services;
-
+using QuickChart;
+using System.Text.Json;
 
 namespace web_programming_project
 {   
@@ -182,8 +183,30 @@ namespace web_programming_project
                 RBLChooseMonth.SelectedIndex = currentMonth - 1; // 設定選擇的月份
 
                 List<List<int>> qwq = handleYearLine(currentYear);
-                // qwq[0] = month List => {1,2,3,...,12}
-                // qwq[1] = balance List => {...}
+                List<int> month = qwq[0];
+                List<int> balance = qwq[1];
+
+                string labelsJson = JsonSerializer.Serialize(month.Select(x => x.ToString()));
+                string dataJson = JsonSerializer.Serialize(balance);
+
+                Chart qc = new Chart();
+                qc.Width = 500;
+                qc.Height = 300;
+                qc.Version = "2.9.4";
+
+                // 2. 注意這裡多了 '$' 符號，變成 $@"..."
+                qc.Config = $@"{{
+                    type: 'line',
+                    data: {{
+                        labels: {labelsJson},
+                        datasets: [{{
+                            label: '月結餘',
+                            data: {dataJson}
+                        }}]
+                    }}
+                }}";
+                qc.BackgroundColor = "#1e293b";
+                year_line_chart.ImageUrl = qc.GetUrl();
             }
         }
     }
