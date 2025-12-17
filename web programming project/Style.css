@@ -125,24 +125,33 @@ div.main {
     justify-items: center;
 }
 div.chart_main {
-    width: calc(100vw - 250px);
+    width: calc(100vw - 250px - 40px);
     height: 100%;
     overflow-y: auto;
     overflow-x: hidden;
-    justify-items: center;
-    padding: 10px 20px 10px 20px;
+    margin: 10px 20px 20px 20px;
     font-size: large;
+    text-align: center;
+    justify-items: center;
 }
-.responsive-chart {
-    width: 50%;
-    height: auto;
-    max-width: calc(100vw - 250px - 20px);
-    display: block;
-}
-.yearLine {
+div.chart_month {
+    display: flex;
+    padding: 10px;
     width: 90%;
-    height: 350px;
-    max-width: calc(100vw - 250px - 50px);
+    height: auto;
+    justify-content: center;
+}
+.small {
+    width: auto;
+    height: auto;
+    padding: 10px;
+    max-width: 384px;
+    max-height: 384px;
+    border-radius: 25px;
+}
+.biggg {
+    width: calc((100vw - 250px - 50px) * 0.9);
+    height: auto;
     display: block;
 }
 /* ===== 上部分 ===== */

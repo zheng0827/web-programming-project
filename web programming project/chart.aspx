@@ -25,7 +25,7 @@
                 <div class="changeYear">
                     <asp:Button ID="prevYear" runat="server" Text="&lt;" CssClass="yearButton" CausesValidation="False" OnClick="prevYear_Click" />
                     <asp:Label ID="yearLabel" runat="server" Text="2025" CssClass="yearLabel"></asp:Label>
-                    <asp:Button ID="nextYear" runat="server" Text="&gt;" CssClass="yearButton" CausesValidation="False" OnClick="nextYear_Click" />
+                    <asp:Button ID="nextYear" runat="server" Text="&gt;" CssClass="yearButton" CausesValidation="False" OnClick="nextYear_Click" Width="23px" />
                 </div>
                 <div class="chooseMonth2">
                     <asp:RadioButtonList ID="RBLChooseMonth" runat="server" RepeatDirection="Horizontal"
@@ -51,22 +51,15 @@
             <div class="chart_main">
                 <br />           
                 <asp:Image ID="year_chart" runat="server" CssClass="biggg" />
-                <br />
-                <div class="month">
-                    <asp:Label ID="Label2" runat="server" Text="月結餘"></asp:Label>
-                    <br />
+                <div class="chart_month">
                     <asp:Image ID="balance_chart" runat="server" CssClass="small" />
-                    <br />
-
-                    <asp:Label ID="Label3" runat="server" Text="類別支出長條圖"></asp:Label>
-                    <br />
                     <asp:Image ID="expense_chart" runat="server" CssClass="small" />
                 </div>
-                <br />
                 <asp:Image ID="daily_expense_chart" runat="server" CssClass="biggg" />
-                
-                
-                
+                <br />
+                <br />
+                <br />
+                <br />
             </div>
 
         </div>

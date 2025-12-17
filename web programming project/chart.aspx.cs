@@ -82,7 +82,7 @@ namespace web_programming_project
             setCurrentYearMonth(currentYear, currentMonth); // 設定隱藏欄位的值
 
             monthTitle.Text = currentYear + " 年 " + currentMonth + " 月 記帳本"; // 設定標題
-            handleChart();
+            handleChart(currentYear, currentMonth);
         }
 
         // 回到主畫面
@@ -304,10 +304,10 @@ namespace web_programming_project
                     responsive: false,
                     title: {{
                         display: true,
-                        text: '{year}年度總覽',
+                        text: '{year} 年度總覽',
                         fontColor: '#ffffff',
                         fontStyle: 'bold',
-                        fontSize: 30,
+                        fontSize: 20,
                     }},
                     scales: {{
                         yAxes: [
@@ -378,7 +378,13 @@ namespace web_programming_project
                   labels: ['收入', '支出'],
                 }},
                 options: {{
-                  responsive: true,
+                  legend: {{
+                    display: true,
+                    labels: {{ 
+                        fontColor: '#ffffff', 
+                        fontSize: 16 
+                    }}
+                  }},
                   title: {{
                     display: true,
                     text: '{year} 年 {month} 月結餘',
@@ -411,6 +417,7 @@ namespace web_programming_project
             string ExpenseCategoryLabelJSON = JsonSerializer.Serialize(labels);
             string ExpenseCategoryLineDataJSON = JsonSerializer.Serialize(data);
 
+            int maxVal = data.Count > 0 ? data.Max() : 0;
             String Config = $@"{{
                 type: 'horizontalBar',
                 data: {{
@@ -442,7 +449,8 @@ namespace web_programming_project
                                 }},
                                 ticks: {{
                                     fontColor: '#ffffff',
-                                    suggestedMax: {data.Max() + 20}
+                                    fontSize: 16,
+                                    suggestedMax: {maxVal + 20}
                                 }},
                             }},
                         ],
@@ -458,6 +466,7 @@ namespace web_programming_project
                                 }},
                                 ticks: {{
                                     fontColor: '#ffffff',
+                                    fontSize: 16
                                 }},
                             }},
                         ],
@@ -494,6 +503,12 @@ namespace web_programming_project
             string dailyExpenseDataJSON = JsonSerializer.Serialize(dailyExpenseData);
             string accumulateExpenseDataJSON = JsonSerializer.Serialize(accumulateExpenseData);
 
+            int maxDaily = dailyExpenseData.Count > 0 ? dailyExpenseData.Max() : 0;
+            int maxAccumulate = accumulateExpenseData.Count > 0 ? accumulateExpenseData.Max() : 0;
+
+            if (maxDaily == 0) maxDaily = 20;
+            if (maxAccumulate == 0) maxAccumulate = 20;
+
             string Config = $@"{{
                 type: 'bar',
                 data: {{
@@ -523,7 +538,7 @@ namespace web_programming_project
                         display: true, 
                         text: '{month}月 每日支出趨勢圖', 
                         fontColor: '#ffffff', 
-                        fontSize: 30 
+                        fontSize: 20 
                     }},
                     tooltips: {{ 
                         mode: 'index', 
@@ -554,7 +569,7 @@ namespace web_programming_project
                                 fontColor: '#ffffff', 
                                 fontSize: 16, 
                                 beginAtZero: true, 
-                                max: {dailyExpenseData.Max() + 10}
+                                max: {maxDaily + 20}
                             }}
                         }}, {{
                             id: 'right-y-axis',
@@ -567,7 +582,7 @@ namespace web_programming_project
                                 fontColor: '#ffffff', 
                                 fontSize: 16, 
                                 beginAtZero: true,
-                                max: {accumulateExpenseData.Max() + 10}
+                                max: {maxAccumulate + 20}
                             }}
                         }}]
                     }},
@@ -593,11 +608,8 @@ namespace web_programming_project
         }
 
         /* ============== 根據 chart_type，依序利用 QuickChart 生成圖表 ============== */
-        protected void handleChart()
+        protected void handleChart(int year, int month)
         {
-            int year = getCurrentYearMonth()[0];
-            int month = getCurrentYearMonth()[1];
-
             foreach (string type in chart_type)
             {
                 Chart switchChart = new Chart();
@@ -608,7 +620,7 @@ namespace web_programming_project
                 {
                     case "year_line":
                         switchChart.Width = 1024;
-                        switchChart.Height = 384;
+                        switchChart.Height = 320;
                         switchChart.Config = proccessYearChartConfig(year);
                         year_chart.ImageUrl = switchChart.GetUrl();
                         break;
@@ -647,7 +659,8 @@ namespace web_programming_project
                 monthTitle.Text = currentYear + " 年 " + currentMonth + " 月 記帳本"; // 設定標題
                 yearLabel.Text = currentYear.ToString(); // 設定年份標籤
                 RBLChooseMonth.SelectedIndex = currentMonth - 1; // 設定選擇的月份
-                handleChart();
+                handleChart(currentYear, currentMonth);
+
             }
         }
 
