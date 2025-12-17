@@ -22,9 +22,6 @@
         <div class="content">
             <!-- 左側 -->
             <div class="sidebar">
-                <!--<asp:DropDownList ID="chooseMonth" runat="server" CssClass="chooseMonth">
-                </asp:DropDownList> -->
-
                 <div class="changeYear">
                     <asp:Button ID="prevYear" runat="server" Text="&lt;" CssClass="yearButton" CausesValidation="False" OnClick="prevYear_Click" />
                     <asp:Label ID="yearLabel" runat="server" Text="2025" CssClass="yearLabel"></asp:Label>
@@ -47,32 +44,26 @@
                         <asp:ListItem Value="12" Text="12"></asp:ListItem>
                     </asp:RadioButtonList>
                 </div>
+                <br />
+                <asp:Button ID="Button2" runat="server" OnClick="Button1_Click" Text="返回" CssClass="changePage" CausesValidation="false" />
             </div>
             <!-- 主要頁面 -->
-            <div class="main">
-                <asp:Button ID="Button1" runat="server" OnClick="Button1_Click" Text="返回" Width="56px" />
-                <br />
-                <asp:Label ID="Label1" runat="server" Text="年度總攬"></asp:Label>
+            <div class="chart_main">
                 <br />           
-                <asp:Image ID="year_line_chart" runat="server" />
+                <asp:Image ID="year_chart" runat="server" CssClass="biggg" />
                 <br />
                 <div class="month">
                     <asp:Label ID="Label2" runat="server" Text="月結餘"></asp:Label>
                     <br />
-                    <asp:Image ID="balance_chart" runat="server" />
+                    <asp:Image ID="balance_chart" runat="server" CssClass="small" />
                     <br />
 
                     <asp:Label ID="Label3" runat="server" Text="類別支出長條圖"></asp:Label>
                     <br />
-                    <asp:Image ID="expense_chart" runat="server" />
-                    <br />
-
-                    <asp:Label ID="Label4" runat="server" Text="日支出趨勢"></asp:Label>
-                    <br />
-                    <asp:Image ID="daliy_expense_chart" runat="server" />
-                    <br />
-
+                    <asp:Image ID="expense_chart" runat="server" CssClass="small" />
                 </div>
+                <br />
+                <asp:Image ID="daily_expense_chart" runat="server" CssClass="biggg" />
                 
                 
                 
@@ -82,65 +73,5 @@
     </form>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            // 替換成您的 Web Form 頁面名稱 (例如: Default.aspx)
-            const pageName = 'chart.aspx';
-
-            $.ajax({
-                type: "POST",
-                url: pageName + "/GetYearLineChartData", // Web Method 路徑
-                data: "{}", // 如果沒有參數，傳遞空 JSON
-                contentType: "application/json; charset=utf-8",
-                dataType: "json",
-                success: function (response) {
-                    const dataObject = response.d; // Web Method 返回的數據在 response.d 中
-                    const ctx = document.getElementById('yearline_chart');
-                    if (ctx) {
-                        const yearline_chart1 = new Chart(ctx, {
-                            type: 'line', // 示例：折線圖
-                            data: {
-                                labels: dataObject.Labels,
-                                datasets: [{
-                                    label: '月分',
-                                    data: dataObject.Data,
-                                    backgroundColor: 'rgba(255, 162, 235, 0.5)',
-                                    borderColor: 'rgba(54, 162, 235, 1)',
-                                    borderWidth: 2,
-                                    // ... 其他樣式設定
-                                }]
-                            },
-                            options: {
-                                responsive: true,
-                                maintainAspectRatio: false,
-                                plugins: {
-                                    title: {
-                                        display: true,
-                                        text: '年度總攬',
-                                        font: {
-                                            size: 18
-                                        }
-                                    }
-                                },
-                                scales: {
-                                    y: {
-                                        beginAtZero: true,
-                                        title: {
-                                            display: true,
-                                            text: '收支'
-                                        }
-                                    }
-                                }
-
-                            // ... 其他 Chart Options
-                        });
-                    }
-                },
-                error: function (xhr, status, error) {
-                    console.error("AJAX 錯誤:", status, error);
-                }
-            });
-        });
-    </script>
 </body>
 </html>

@@ -18,10 +18,6 @@ namespace web_programming_project
 
         /* ================================== 變數宣告 ================================== */
         private Dictionary<string, string> category = new Dictionary<string, string>();
-        private List<string> categoryList = new List<string> {
-            "早餐","午餐","晚餐","購物","醫療","點心","娛樂","交通","社交","數位服務",
-            "薪水","獎金","禮金","投資","其他"
-        };
         private List<string> categoryListE = new List<string> {
             "早餐","午餐","晚餐","購物","醫療","點心","娛樂","交通","社交","數位服務"
         };
@@ -81,7 +77,7 @@ namespace web_programming_project
             date0.Text = "";// 重設日期輸入欄位
             amount0.Text = "";// 重設金額輸入欄位
             description0.Text = "";// 重設備註輸入欄位
-            BindCategory(categoryList);
+            BindCategory(categoryListE);
         }
 
         // 儲存按鈕事件
@@ -89,7 +85,7 @@ namespace web_programming_project
         {
             if (!IsValid) return;
             string type = (RadioButtonList1.SelectedIndex == 0) ? "e" : "i";
-            string categoryValue = categoryList[chooseCategory.SelectedIndex];
+            string categoryValue = chooseCategory.SelectedValue;
             string dateStr = date0.Text;
             string description = description0.Text;
             int amount = int.Parse(amount0.Text);
@@ -197,8 +193,8 @@ namespace web_programming_project
         // 
         protected void RadioButtonList1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (RadioButtonList1.SelectedIndex == 0) BindCategory(categoryList);
-            else BindCategory(categoryList);
+            if (RadioButtonList1.SelectedIndex == 0) BindCategory(categoryListE);
+            else BindCategory(categoryListI);
 
             chooseCategory.SelectedIndex = -1;// 重設類別選擇
         }
@@ -321,7 +317,7 @@ namespace web_programming_project
 
                 BindDetailData();
                 BindSummaryData();
-                BindCategory(categoryList);
+                BindCategory(categoryListE);
             }
         }
         // 綁定日期到大Repeater
@@ -337,11 +333,11 @@ namespace web_programming_project
         }
 
         // 綁定類別到下拉選單
-        protected void BindCategory(List<string> categoryList)
+        protected void BindCategory(List<string> categoryList1)
         {
             category.Clear();
             // 綁定類別下拉選單
-            foreach (string cat in categoryList)
+            foreach (string cat in categoryList1)
             {
                 category.Add(cat, cat);
             }

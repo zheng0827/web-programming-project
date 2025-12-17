@@ -51,15 +51,6 @@ namespace web_programming_project
         protected global::System.Web.UI.WebControls.HiddenField currentYearMonth;
 
         /// <summary>
-        /// chooseMonth 控制項。
-        /// </summary>
-        /// <remarks>
-        /// 自動產生的欄位。
-        /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList chooseMonth;
-
-        /// <summary>
         /// prevYear 控制項。
         /// </summary>
         /// <remarks>
@@ -96,31 +87,22 @@ namespace web_programming_project
         protected global::System.Web.UI.WebControls.RadioButtonList RBLChooseMonth;
 
         /// <summary>
-        /// Button1 控制項。
+        /// Button2 控制項。
         /// </summary>
         /// <remarks>
         /// 自動產生的欄位。
         /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button Button1;
+        protected global::System.Web.UI.WebControls.Button Button2;
 
         /// <summary>
-        /// Label1 控制項。
+        /// year_chart 控制項。
         /// </summary>
         /// <remarks>
         /// 自動產生的欄位。
         /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label Label1;
-
-        /// <summary>
-        /// year_line_chart 控制項。
-        /// </summary>
-        /// <remarks>
-        /// 自動產生的欄位。
-        /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Image year_line_chart;
+        protected global::System.Web.UI.WebControls.Image year_chart;
 
         /// <summary>
         /// Label2 控制項。
@@ -159,21 +141,12 @@ namespace web_programming_project
         protected global::System.Web.UI.WebControls.Image expense_chart;
 
         /// <summary>
-        /// Label4 控制項。
+        /// daily_expense_chart 控制項。
         /// </summary>
         /// <remarks>
         /// 自動產生的欄位。
         /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label Label4;
-
-        /// <summary>
-        /// daliy_expense_chart 控制項。
-        /// </summary>
-        /// <remarks>
-        /// 自動產生的欄位。
-        /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Image daliy_expense_chart;
+        protected global::System.Web.UI.WebControls.Image daily_expense_chart;
     }
 }

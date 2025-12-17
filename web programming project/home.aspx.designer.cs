@@ -51,15 +51,6 @@ namespace web_programming_project
         protected global::System.Web.UI.WebControls.HiddenField currentYearMonth;
 
         /// <summary>
-        /// chooseMonth 控制項。
-        /// </summary>
-        /// <remarks>
-        /// 自動產生的欄位。
-        /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList chooseMonth;
-
-        /// <summary>
         /// prevYear 控制項。
         /// </summary>
         /// <remarks>

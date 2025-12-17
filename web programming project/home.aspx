@@ -20,9 +20,6 @@
         <div class="content">
             <!-- 左側 -->
             <div class="sidebar">
-                <!--<asp:DropDownList ID="chooseMonth" runat="server" CssClass="chooseMonth">
-                </asp:DropDownList> -->
-
                 <div class="changeYear">
                     <asp:Button ID="prevYear" runat="server" Text="&lt;" CssClass="yearButton" CausesValidation="False" OnClick="prevYear_Click" />
                     <asp:Label ID="yearLabel" runat="server" Text="2025" CssClass="yearLabel"></asp:Label>
@@ -46,8 +43,7 @@
                     </asp:RadioButtonList>
                 </div>
                 <br />
-                <br />
-                <asp:Button ID="chart" runat="server" Text="圖表" CausesValidation="False" OnClick="chart_Click" />
+                <asp:Button ID="chart" runat="server" Text="查看圖表" CausesValidation="False" OnClick="chart_Click" CssClass="changePage"/>
             </div>
             <!-- 中間 -->
             <div class="main">
