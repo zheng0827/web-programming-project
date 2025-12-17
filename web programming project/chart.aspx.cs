@@ -450,6 +450,7 @@ namespace web_programming_project
                                 ticks: {{
                                     fontColor: '#ffffff',
                                     fontSize: 16,
+                                    suggestedMin: 0,
                                     suggestedMax: {maxVal + 20}
                                 }},
                             }},
