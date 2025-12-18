@@ -88,10 +88,7 @@ namespace web_programming_project
         // 回到主畫面
         protected void Button1_Click(object sender, EventArgs e)
         {
-            int year = getCurrentYearMonth()[0];
-            int month = getCurrentYearMonth()[1];
-
-            Response.Redirect($"home.aspx?year={year}&month={month}");
+            Response.Redirect("home.aspx");
         }
 
         /* ================================== 獲取資料 ================================== */
