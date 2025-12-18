@@ -88,7 +88,10 @@ namespace web_programming_project
         // 回到主畫面
         protected void Button1_Click(object sender, EventArgs e)
         {
-            Response.Redirect("home.aspx");
+            int year = getCurrentYearMonth()[0];
+            int month = getCurrentYearMonth()[1];
+
+            Response.Redirect($"home.aspx?year={year}&month={month}");
         }
 
         /* ================================== 獲取資料 ================================== */
@@ -250,13 +253,13 @@ namespace web_programming_project
         // 月份支出類別資料。回傳({日期Label}、{每日支出}、{累加支出})
         protected List<List<int>> handleDailyExpenseLineAndBar(int Year, int Month)
         {
-            List<int> dayList = Enumerable.Range(1, 31).ToList();
-            List<int> expenseList = Enumerable.Repeat(0, 31).ToList();
-            List<int> accumulateExpenseList = Enumerable.Repeat(0, 31).ToList();
+            List<int> dayList = Enumerable.Range(1, 31).ToList();// 日期 List
+            List<int> expenseList = Enumerable.Repeat(0, 31).ToList();// 每日支出 List
+            List<int> accumulateExpenseList = Enumerable.Repeat(0, 31).ToList();// 累加支出 List
 
             SqlDataSource monthDetail = getDetailByMonthAndYear(Year, Month);
             DataView dataView = (DataView)monthDetail.Select(DataSourceSelectArguments.Empty);
-
+            // 根據每筆資料進行統計
             foreach (DataRowView rowView in dataView)
             {
                 if (rowView["type"].ToString() != "e") continue;
@@ -265,12 +268,13 @@ namespace web_programming_project
                 int amount = Convert.ToInt32(rowView["amount"]);
                 expenseList[inx] += amount;
             }
+            // 根據每日支出 List，加入至累加支出 List
             for (int i = 0;i < 31;++i)
             {
                 int singleDayExpense = expenseList[i];
                 accumulateExpenseList[i] += singleDayExpense + (i == 0 ? 0 : accumulateExpenseList[i-1]);
                 
-            }
+            } 
             return new List<List<int>> { dayList, expenseList, accumulateExpenseList };
         }
 
@@ -496,10 +500,11 @@ namespace web_programming_project
         {
             List<List<int>> dailyExpense = handleDailyExpenseLineAndBar(year, month);
 
-            List<int> dayLabel = dailyExpense[0];
-            List<int> dailyExpenseData = dailyExpense[1];
-            List<int> accumulateExpenseData = dailyExpense[2];
+            List<int> dayLabel = dailyExpense[0];// 日期 List
+            List<int> dailyExpenseData = dailyExpense[1];// 每日支出 List
+            List<int> accumulateExpenseData = dailyExpense[2];// 累加支出 List
 
+            // 將List 物件轉為JSON 字串
             string dayLabelJSON = JsonSerializer.Serialize(dayLabel.Select(m => m.ToString()));
             string dailyExpenseDataJSON = JsonSerializer.Serialize(dailyExpenseData);
             string accumulateExpenseDataJSON = JsonSerializer.Serialize(accumulateExpenseData);
