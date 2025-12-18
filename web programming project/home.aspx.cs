@@ -78,6 +78,7 @@ namespace web_programming_project
             amount0.Text = "";// 重設金額輸入欄位
             description0.Text = "";// 重設備註輸入欄位
             BindCategory(categoryListE);
+            BindInputDate();
         }
 
         // 儲存按鈕事件
@@ -108,6 +109,7 @@ namespace web_programming_project
             SqlDataSource1.InsertParameters.Add("id", System.Data.DbType.String, id);
             SqlDataSource1.Insert();
             // 重新綁定資料
+            BindInputDate();
             BindDetailData();
             BindSummaryData();
 
@@ -120,13 +122,6 @@ namespace web_programming_project
             description0.Text = "";
             // 重新整理頁面(重要!)
             Response.Redirect("home.aspx?date=" + HttpUtility.UrlEncode(currentVal));
-        }
-
-        protected SqlConnection getConn()
-        {
-            string connectionString = "Data Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename=|DataDirectory|\\Database1.mdf;Integrated Security=True";
-
-            return new SqlConnection(connectionString);
         }
 
         // 刪除按鈕事件
@@ -145,32 +140,8 @@ namespace web_programming_project
                 SqlDataSource1.DeleteParameters.Add("ID", recordId);
                 SqlDataSource1.Delete();
                 // 刷新頁面
-                Response.Redirect("home.aspx");
-
-                /*
-                 * 這邊做了一些小修改，改為使用在設計頁面添加的 SqlDataSource 物件 SqlDataSource1。看起來更簡潔。
-                string deleteQuery = "DELETE FROM [Details] WHERE ID = @ID";
-                using (SqlConnection conn = getConn())
-                {
-                    using (SqlCommand cmd = new SqlCommand(deleteQuery, conn))
-                    {
-                        //傳遞字串 ID
-                        cmd.Parameters.AddWithValue("@ID", recordId);
-
-                        try
-                        {
-                            conn.Open();
-                            cmd.ExecuteNonQuery();
-
-                            //刷新頁面
-                            Response.Redirect("home.aspx");
-                        }
-                        catch (Exception ex)
-                        {
-                         
-                        }
-                    }
-                }*/
+                string currentVal = currentYearMonth.Value;
+                Response.Redirect("home.aspx?date=" + HttpUtility.UrlEncode(currentVal));
             }
         }
 
@@ -189,6 +160,7 @@ namespace web_programming_project
 
             monthTitle.Text = currentYear + " 年 " + currentMonth + " 月 記帳本"; // 設定標題
             BindSummaryData();
+            BindInputDate();
             BindDetailData(); // 綁定明細資料
         }
 
@@ -311,30 +283,50 @@ namespace web_programming_project
             {
                 string dateParam = Request.QueryString["date"];
 
+                DateTime temp;
                 if (!string.IsNullOrEmpty(dateParam))
                 {
                     currentYearMonth.Value = dateParam;
                     int year = int.Parse(dateParam.Split(' ')[0]);
                     int month = int.Parse(dateParam.Split(' ')[1]);
 
-                    monthTitle.Text = year + " 年 " + month + " 月 記帳本"; // 設定標題
-                    yearLabel.Text = year.ToString(); // 設定年份標籤
-                    RBLChooseMonth.SelectedIndex = month - 1; // 設定選擇的月份
+                    temp = new DateTime(year, month, 1);
                 }
                 else
                 {
-                    int currentYear = DateTime.Now.Year; // 取得目前年份
-                    int currentMonth = DateTime.Now.Month; // 取得目前月份
-                    setCurrentYearMonth(currentYear, currentMonth); // 設定隱藏欄位的值
-
-                    monthTitle.Text = currentYear + " 年 " + currentMonth + " 月 記帳本"; // 設定標題
-                    yearLabel.Text = currentYear.ToString(); // 設定年份標籤
-                    RBLChooseMonth.SelectedIndex = currentMonth - 1; // 設定選擇的月份
+                    temp = DateTime.Now;
                 }
+
+                int currentYear = temp.Year; // 取得目前年份
+                int currentMonth = temp.Month; // 取得目前月份
+                setCurrentYearMonth(currentYear, currentMonth); // 設定隱藏欄位的值
+
+                monthTitle.Text = currentYear + " 年 " + currentMonth + " 月 記帳本"; // 設定標題
+                yearLabel.Text = currentYear.ToString(); // 設定年份標籤
+                RBLChooseMonth.SelectedIndex = currentMonth - 1; // 設定選擇的月份
+
                 BindDetailData();
                 BindSummaryData();
+                BindInputDate();
                 BindCategory(categoryListE);
             }
+        }
+        protected void BindInputDate()
+        {
+            int year = getCurrentYearMonth()[0];
+            int month = getCurrentYearMonth()[1];
+            DateTime temp;
+
+            if (year == DateTime.Now.Year && month == DateTime.Now.Month)
+            {
+                temp = DateTime.Now;
+            }
+            else
+            {
+                temp = new DateTime(year, month, 1);
+            }
+
+            date0.Text = temp.ToString("yyyy-MM-dd");
         }
         // 綁定日期到大Repeater
         protected void BindDetailData()
@@ -398,7 +390,8 @@ namespace web_programming_project
 
         protected void chart_Click(object sender, EventArgs e)
         {
-            Response.Redirect("chart.aspx");
+                string currentVal = currentYearMonth.Value;
+                Response.Redirect("chart.aspx");
         }
     }
 }
